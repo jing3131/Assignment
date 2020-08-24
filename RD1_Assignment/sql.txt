@@ -1,0 +1,42 @@
+CREATE DATABASE RD1_Assignment;
+USE RD1_Assignment;
+
+// 新建帳戶資料
+CREATE TABLE member(
+	accountId int AUTO_INCREMENT PRIMARY KEY,
+    name varchar(30) NOT null,
+    account varchar(50) NOT null,
+    password varchar(20) NOT null
+)
+
+INSERT INTO member (name, account, password)VALUES("chung","abcChung","123");
+INSERT INTO member (name, account, password)VALUES("yo","defYo","456");
+
+// 新建帳戶銀行
+CREATE TABLE memberBank(
+    accountId int not null,
+    money int 
+)
+
+INSERT INTO memberBank (accountId, money) VALUES (3,75638);
+INSERT INTO memberBank (accountId, money) VALUES (6,650);
+INSERT INTO memberBank (accountId, money) VALUES (8,9560);
+INSERT INTO memberBank (accountId, money) VALUES (9,22000)
+
+// 建立memberBank member外鍵
+ALTER TABLE memberBank
+ADD CONSTRAINT fk_mbrbank_mbr
+FOREIGN KEY (accountId) REFERENCES member(accountId);
+
+// 新建帳戶明細
+CREATE TABLE accountDetail(
+    detialId int AUTO_INCREMENT PRIMARY KEY,
+	accountId int not null,
+    type varchar(20) not null,
+    money int not null
+);
+
+// 建立accountDetail member外鍵
+ALTER TABLE accountDetail
+ADD CONSTRAINT fk_actdtl_mbr
+FOREIGN KEY (accountId) REFERENCES member(accountId)
