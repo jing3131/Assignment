@@ -30,13 +30,20 @@ FOREIGN KEY (accountId) REFERENCES member(accountId);
 
 // 新建帳戶明細
 CREATE TABLE accountDetail(
-    detialId int AUTO_INCREMENT PRIMARY KEY,
 	accountId int not null,
     type varchar(20) not null,
-    money int not null
+    moneyChange int not null,
+    dates date not null,
+    balance int not null
 );
 
 // 建立accountDetail member外鍵
 ALTER TABLE accountDetail
 ADD CONSTRAINT fk_actdtl_mbr
 FOREIGN KEY (accountId) REFERENCES member(accountId)
+
+
+INSERT INTO accountDetail (accountId, type, moneyChange, dates)
+VALUES (9, 'withdraw', 3000, '2020-08-25');
+
+https://bootstrapformbuilder.com

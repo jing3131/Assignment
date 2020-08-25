@@ -57,34 +57,41 @@ if(isset($_POST["loginbtn"])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
-    <form method="post" id="loginForm" name="loginForm">
-    登入/Login
-    <div class="form-group row">
-        <label for="accountTF" class="col-4 col-form-label">帳號/Account</label> 
-        <div class="col-6">
-        <input id="accountTF" name="accountTF" type="text" class="form-control" require>
-        </div>
+    <div style="text-align:center; background-color:#E0FFFF;">      <!-- style="text-align:center;" 置中 -->
+        <form method="post" id="loginForm" name="loginForm">
+            <div class="form-group row">
+                <label class="col-4 col-form-label">登入/Login</label>
+            </div>
+            
+            <div class="form-group row">
+                <label for="accountTF" class="col-4 col-form-label">帳號/Account</label> 
+                <div class="col-6">
+                <input id="accountTF" name="accountTF" type="text" class="form-control" require>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="passwordTF" class="col-4 col-form-label">密碼/Password</label> 
+                <div class="col-6">
+                <input id="passwordTF" name="passwordTF" type="password" class="form-control" require>
+                </div>
+            </div> 
+            <div class="form-group row">                
+                <div class="col-10" style="text-align:right"><button name="loginbtn" type="submit" class="btn btn-outline-primary">登入</button> </div>
+            </div>      
+            <div class="form-group row">
+                <label class="col-4 col-form-label">註冊/Signup</label>
+                <button name="signupbtn" type="submit" class="btn btn-outline-success">GoSignup</button>                
+            </div>            
+
+        </form>
     </div>
-    <div class="form-group row">
-        <label for="passwordTF" class="col-4 col-form-label">密碼/Password</label> 
-        <div class="col-6">
-        <input id="passwordTF" name="passwordTF" type="text" class="form-control" require>
-        </div>
-    </div> 
-        註冊/Signup
-        <button name="signupbtn" type="submit" class="btn btn-success">Go</button>
-    <div class="form-group row">
-        <div class="offset-4 col-8">
-        <button name="loginbtn" type="submit" class="btn btn-primary">登入</button>        
-        </div>
-    </div>
-    </form>
     
 </body>
 </html>

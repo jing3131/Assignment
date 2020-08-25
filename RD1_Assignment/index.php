@@ -17,10 +17,35 @@ if($_GET["logout"]){
     <title>Document</title>
     <script type="text/javascript" src="js/jquery.js"></script>
     <script type="text/javascript"></script>
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+        #container {
+            margin: 0 auto; width: 25%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
-<body>
-        <button type="submit" name="loginbtn" id="loginbtn" class="btn btn-primary" onclick="window.location='login.php'">登入</button>
-        <button type="submit" name="signupbtn" id="signupbtn" class="btn btn-success" onclick="window.location='signup.php'">註冊</button>
+<body  style="background-color:#E0FFFF">
+
+    <div style="text-align:center;" id="container" >
+       <br>
+        <table width="300" style="border:5px #22C32E solid;">
+            <tr>
+                <td><h4>歡迎光臨線上網路銀行系統</h4></td>
+            </tr>
+            <tr>
+                <td><h5>會員登入/login</h5></td>
+                <td><button type="submit" name="loginbtn" id="loginbtn" class="btn btn-outline-primary" onclick="window.location='login.php'">登入</button></td>
+            </tr>
+            <tr>
+                <td><h5>還不是會員? signup</h5></td>
+                <td> <button type="submit" name="signupbtn" id="signupbtn" class="btn btn-outline-success" onclick="window.location='signup.php'">註冊</button></td>
+            </tr>
+        </table>
+        
+        
+    </div>  
+    
 
 
 
