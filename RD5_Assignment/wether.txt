@@ -1,0 +1,24 @@
+當日
+1. city
+2. wx (天氣狀況)    -> 晴時多雲偶陣雨
+3. PoP (降雨機率) %
+4. MinT (最低溫度) C
+5. CI (體感狀況)    -> 舒適至悶熱
+6. MaxT (最高溫度) C
+7. Date 
+8. locationName
+
+PoP12h  12小時降雨機率
+Wx      天氣現象
+AT      體感溫度
+T       溫度
+RH      相對濕度
+CI      舒適度指數
+WeatherDescription  天氣預報綜合描述
+PoP6h   6小時降雨機率
+WS      風速
+WD      風向
+Td      露點溫度
+
+
+Wx WeatherDescription T PoP6h PoP12h RH WS

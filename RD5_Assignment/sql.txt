@@ -1,0 +1,113 @@
+CREATE DATABASE RD5_Assignment DEFAULT CHARACTER SET utf8;
+USE DATABASE RD5_Assignment;
+
+CREATE TABLE location (
+    locationId int PRIMARY KEY,
+    locationName varchar(30) not null
+);
+
+CREATE TABLE Wx(
+    locationId int not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    `value` varchar(30) not null
+);
+
+CREATE TABLE `AT`(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null
+);
+
+CREATE TABLE T(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null
+);
+
+CREATE TABLE RH(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null
+);
+
+
+CREATE TABLE WeatherDescription(
+    locationId int not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    `value` varchar(70) not null
+);
+
+CREATE TABLE PoP6h(
+    locationId int not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    `value` int not null
+);
+
+CREATE TABLE WS(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null            # 公尺/秒
+);
+
+CREATE TABLE WD(
+    locationId int not null,
+    dataTime date not null,
+    `value` varchar(30) not null
+);
+
+CREATE TABLE Td(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null
+)
+
+CREATE TABLE PoP12h(
+    locationId int not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    `value` int not null
+);
+
+
+CREATE TABLE CI(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null
+)
+
+
+
+
+
+
+
+
+CREATE TABLE weather (
+    cityId int PRIMARY KEY,
+    wx varchar(30) not null,
+    PoP int not null,
+    MinT int not null,
+    CI varchar(30) not null,
+    MaxT int not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    locationName varchar(30) not null
+);
+
+
+DELETE FROM WeatherDescription;
+DELETE FROM Wx;
+DELETE FROM PoP6h;
+DELETE FROM PoP12h;
+DELETE FROM WD;
+DELETE FROM WS;
+DELETE FROM AT;
+DELETE FROM T;
+DELETE FROM Td;
+DELETE FROM CI;
+DELETE FROM RH;
+
+
