@@ -1,49 +1,127 @@
-CREATE DATABASE RD1_Assignment;
-USE RD1_Assignment;
+CREATE DATABASE RD1_Assignment DEFAULT CHARACTER SET utf8;
+USE DATABASE RD1_Assignment;
 
-// 新建帳戶資料
-CREATE TABLE member(
-	accountId int AUTO_INCREMENT PRIMARY KEY,
-    name varchar(30) NOT null,
-    account varchar(50) NOT null,
-    password varchar(20) NOT null
-)
-
-INSERT INTO member (name, account, password)VALUES("chung","abcChung","123");
-INSERT INTO member (name, account, password)VALUES("yo","defYo","456");
-
-// 新建帳戶銀行
-CREATE TABLE memberBank(
-    accountId int not null,
-    money int 
-)
-
-INSERT INTO memberBank (accountId, money) VALUES (3,75638);
-INSERT INTO memberBank (accountId, money) VALUES (6,650);
-INSERT INTO memberBank (accountId, money) VALUES (8,9560);
-INSERT INTO memberBank (accountId, money) VALUES (9,22000)
-
-// 建立memberBank member外鍵
-ALTER TABLE memberBank
-ADD CONSTRAINT fk_mbrbank_mbr
-FOREIGN KEY (accountId) REFERENCES member(accountId);
-
-// 新建帳戶明細
-CREATE TABLE accountDetail(
-	accountId int not null,
-    type varchar(20) not null,
-    moneyChange int not null,
-    dates date not null,
-    balance int not null
+CREATE TABLE location (
+    locationId int PRIMARY KEY,
+    locationName varchar(30) not null
 );
 
-// 建立accountDetail member外鍵
-ALTER TABLE accountDetail
-ADD CONSTRAINT fk_actdtl_mbr
-FOREIGN KEY (accountId) REFERENCES member(accountId)
+INSERT INTO location (locationId, locationName)
+VALUES (0,'嘉義縣'),(1,'新北市'),(2,'嘉義市'),(3,'新竹縣'),(4,'新竹市'),
+(5,'臺北市'),(6,'臺南市'),(7,'宜蘭縣'),(8,'苗栗縣'),(9,'雲林縣'),(10,'花蓮縣'),
+(11,'臺中市'),(12,'臺東縣'),(13,'桃園市'),(14,'南投縣'),(15,'高雄市'),
+(16,'金門縣'),(17,'屏東縣'),(18,'基隆市'),(19,'澎湖縣'),(20,'彰化縣'),(21,'連江縣')
+
+CREATE TABLE Wx(
+    locationId int not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    `value` varchar(30) not null
+);
+
+CREATE TABLE `AT`(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null
+);
+
+CREATE TABLE T(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null
+);
+
+CREATE TABLE RH(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null
+);
 
 
-INSERT INTO accountDetail (accountId, type, moneyChange, dates)
-VALUES (9, 'withdraw', 3000, '2020-08-25');
+CREATE TABLE WeatherDescription(
+    locationId int not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    `value` varchar(70) not null
+);
 
-https://bootstrapformbuilder.com
+CREATE TABLE PoP6h(
+    locationId int not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    `value` int not null
+);
+
+CREATE TABLE WS(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null            # 公尺/秒
+);
+
+CREATE TABLE WD(
+    locationId int not null,
+    dataTime date not null,
+    `value` varchar(30) not null
+);
+
+CREATE TABLE Td(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null
+)
+
+CREATE TABLE PoP12h(
+    locationId int not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    `value` int not null
+);
+
+
+CREATE TABLE CI(
+    locationId int not null,
+    dataTime date not null,
+    `value` int not null
+)
+
+
+
+
+
+
+
+
+CREATE TABLE weather (
+    cityId int PRIMARY KEY,
+    wx varchar(30) not null,
+    PoP int not null,
+    MinT int not null,
+    CI varchar(30) not null,
+    MaxT int not null,
+    startTime datetime not null,
+    endTime datetime not null,
+    locationName varchar(30) not null
+);
+
+CREATE TABLE rain (
+    locationId int not null,
+    type varchar(20) not null,
+    rainMm double not null,
+    locatedName varchar(30) not null
+    #dates datetime not null
+);
+
+
+DELETE FROM WeatherDescription;
+DELETE FROM Wx;
+DELETE FROM PoP6h;
+DELETE FROM PoP12h;
+DELETE FROM WD;
+DELETE FROM WS;
+DELETE FROM AT;
+DELETE FROM T;
+DELETE FROM Td;
+DELETE FROM CI;
+DELETE FROM RH;
+
+

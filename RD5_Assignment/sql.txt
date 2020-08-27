@@ -1,113 +1,49 @@
 CREATE DATABASE RD5_Assignment DEFAULT CHARACTER SET utf8;
-USE DATABASE RD5_Assignment;
+USE RD5_Assignment;
 
-CREATE TABLE location (
-    locationId int PRIMARY KEY,
-    locationName varchar(30) not null
-);
-
-CREATE TABLE Wx(
-    locationId int not null,
-    startTime datetime not null,
-    endTime datetime not null,
-    `value` varchar(30) not null
-);
-
-CREATE TABLE `AT`(
-    locationId int not null,
-    dataTime date not null,
-    `value` int not null
-);
-
-CREATE TABLE T(
-    locationId int not null,
-    dataTime date not null,
-    `value` int not null
-);
-
-CREATE TABLE RH(
-    locationId int not null,
-    dataTime date not null,
-    `value` int not null
-);
-
-
-CREATE TABLE WeatherDescription(
-    locationId int not null,
-    startTime datetime not null,
-    endTime datetime not null,
-    `value` varchar(70) not null
-);
-
-CREATE TABLE PoP6h(
-    locationId int not null,
-    startTime datetime not null,
-    endTime datetime not null,
-    `value` int not null
-);
-
-CREATE TABLE WS(
-    locationId int not null,
-    dataTime date not null,
-    `value` int not null            # 公尺/秒
-);
-
-CREATE TABLE WD(
-    locationId int not null,
-    dataTime date not null,
-    `value` varchar(30) not null
-);
-
-CREATE TABLE Td(
-    locationId int not null,
-    dataTime date not null,
-    `value` int not null
+// 新建帳戶資料
+CREATE TABLE member(
+	accountId int AUTO_INCREMENT PRIMARY KEY,
+    name varchar(30) NOT null,
+    account varchar(50) NOT null,
+    password varchar(20) NOT null
 )
 
-CREATE TABLE PoP12h(
-    locationId int not null,
-    startTime datetime not null,
-    endTime datetime not null,
-    `value` int not null
-);
+INSERT INTO member (name, account, password)VALUES("chung","abcChung","123");
+INSERT INTO member (name, account, password)VALUES("yo","defYo","456");
 
-
-CREATE TABLE CI(
-    locationId int not null,
-    dataTime date not null,
-    `value` int not null
+// 新建帳戶銀行
+CREATE TABLE memberBank(
+    accountId int not null,
+    money int 
 )
 
+INSERT INTO memberBank (accountId, money) VALUES (3,75638);
+INSERT INTO memberBank (accountId, money) VALUES (6,650);
+INSERT INTO memberBank (accountId, money) VALUES (8,9560);
+INSERT INTO memberBank (accountId, money) VALUES (9,22000)
 
+// 建立memberBank member外鍵
+ALTER TABLE memberBank
+ADD CONSTRAINT fk_mbrbank_mbr
+FOREIGN KEY (accountId) REFERENCES member(accountId);
 
-
-
-
-
-
-CREATE TABLE weather (
-    cityId int PRIMARY KEY,
-    wx varchar(30) not null,
-    PoP int not null,
-    MinT int not null,
-    CI varchar(30) not null,
-    MaxT int not null,
-    startTime datetime not null,
-    endTime datetime not null,
-    locationName varchar(30) not null
+// 新建帳戶明細
+CREATE TABLE accountDetail(
+	accountId int not null,
+    type varchar(20) not null,
+    moneyChange int not null,
+    dates date not null,
+    balance int not null
 );
 
-
-DELETE FROM WeatherDescription;
-DELETE FROM Wx;
-DELETE FROM PoP6h;
-DELETE FROM PoP12h;
-DELETE FROM WD;
-DELETE FROM WS;
-DELETE FROM AT;
-DELETE FROM T;
-DELETE FROM Td;
-DELETE FROM CI;
-DELETE FROM RH;
+// 建立accountDetail member外鍵
+ALTER TABLE accountDetail
+ADD CONSTRAINT fk_actdtl_mbr
+FOREIGN KEY (accountId) REFERENCES member(accountId)
 
 
+INSERT INTO accountDetail (accountId, type, moneyChange, dates)
+VALUES (9, 'withdraw', 3000, '2020-08-25');
+
+https://bootstrapformbuilder.com
