@@ -30,23 +30,40 @@ if(isset($_POST["submitbtn"])){
         else{
             $date = date("Y-m-d");
             $id = $_SESSION["accountId"];
-            $sqlmoney = "select money from memberBank where accountId = $id";
-            $result = mysqli_query($link,$sqlmoney);
-            $row["money"] = mysqli_fetch_assoc($result);
+
+            $sqlmoney = "select money from memberBank where accountId = ?";
+            $result = $link->prepare($sqlmoney);
+            $result->execute(array($id));
+            $row["money"] = $result->fetch(PDO::FETCH_ASSOC);
+            // $sqlmoney = "select money from memberBank where accountId = $id";
+            // $result = mysqli_query($link,$sqlmoney);
+            // $row["money"] = mysqli_fetch_assoc($result);
             $money = implode("",$row["money"]);                                 // 原帳戶有的金額
             $money += $deposit;                                                 // 存款+原帳戶金額
     
+
             $sqldpt = <<< sqlCommand
-                UPDATE memberBank SET money = $money where accountId = $id
+                UPDATE memberBank SET money = ? where accountId = ?
             sqlCommand;
-            mysqli_query($link,$sqldpt);
+            $result =$link->prepare($sqldpt);
+            $result->execute(array($money,$id));
+            // $sqldpt = <<< sqlCommand
+            //     UPDATE memberBank SET money = $money where accountId = $id
+            // sqlCommand;
+            // mysqli_query($link,$sqldpt);
     
             $date = date("Y-m-d");
             $sqld = <<< sqlCommand
                 INSERT INTO accountDetail (accountId, type, moneyChange, dates, balance)
-                VALUES ($id, 'deposit', $deposit, '$date', $money);
+                VALUES (?, 'deposit', ?, ?, ?);
             sqlCommand;
-            mysqli_query($link,$sqld);                                  // 新增資料進accountdetail
+            $result = $link->prepare($sqld);
+            $result->execute(array($id,$deposit,"$date",$money));
+            // $sqld = <<< sqlCommand
+            //     INSERT INTO accountDetail (accountId, type, moneyChange, dates, balance)
+            //     VALUES ($id, 'deposit', $deposit, '$date', $money);
+            // sqlCommand;
+            // mysqli_query($link,$sqld);                                  // 新增資料進accountdetail
     
             echo "<script> alert('存款成功'); </script>";
             header("refresh:0.5;url='memberIndex.php'");

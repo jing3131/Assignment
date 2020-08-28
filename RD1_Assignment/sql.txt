@@ -38,11 +38,12 @@ CREATE TABLE RH(
 );
 
 
-CREATE TABLE WeatherDescription(
-    locationId int not null,
-    startTime datetime not null,
-    endTime datetime not null,
-    `value` varchar(70) not null
+CREATE TABLE WeatherDescription (
+	id int AUTO_INCREMENT PRIMARY KEY,
+    locationId int NOT null,
+    startTime datetime NOT null,
+    endTime datetime NOT null,
+    `value` varchar(80) NOT null
 );
 
 CREATE TABLE PoP6h(
@@ -104,6 +105,7 @@ CREATE TABLE weather (
 );
 
 CREATE TABLE rain (
+    id int AUTO_INCREMENT PRIMARY KEY,
     locationId int not null,
     type varchar(20) not null,
     rainMm double not null,

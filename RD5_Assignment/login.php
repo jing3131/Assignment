@@ -11,17 +11,27 @@ if(isset($_POST["signupbtn"])){
 if(isset($_POST["loginbtn"])){
     $account = $_POST["accountTF"];
     $password = $_POST["passwordTF"];
-    $sqlAcc = "select account from member where account = '$account' ";
-    $resultAcc = mysqli_query($link,$sqlAcc);
 
-    $row["account"] = mysqli_fetch_assoc($resultAcc);           // 確認是否有此帳號
-    // echo "row".$row["account"];
-    // print_r($row["account"]);
+    $sqlAcc = "select account from member where account = ? ";
+    $resultAcc = $link->prepare($sqlAcc);
+    $resultAcc->execute(array($account));
 
 
-    $sqlPwd = "select account, password from member where password = '$password' ";
-    $resultPwd = mysqli_query($link,$sqlPwd);
-    $row["password"] = mysqli_fetch_assoc($resultPwd);          // 確認密碼正確與否
+    // $sqlAcc = "select account from member where account = '$account' ";
+    // $resultAcc = mysqli_query($link,$sqlAcc);
+
+    $row["account"] = $resultAcc->fetch(PDO::FETCH_ASSOC);
+    //$row["account"] = mysqli_fetch_assoc($resultAcc);           // 確認是否有此帳號
+
+
+    $sqlPwd = "select `password` from member where account = ? and `password` = ?";
+    $resultPwd = $link->prepare($sqlPwd);
+    $resultPwd->execute(array("$account","$password"));
+    $row["password"] = $resultPwd->fetch(PDO::FETCH_ASSOC);
+    // $sqlPwd = "select account, password from member where password = '$password' ";
+    // $resultPwd = mysqli_query($link,$sqlPwd);
+    // $row["password"] = mysqli_fetch_assoc($resultPwd);          // 確認密碼正確與否
+
     // echo "row".$row["password"];
     // print_r($row["password"]);
     
@@ -38,11 +48,17 @@ if(isset($_POST["loginbtn"])){
     else{
         $_SESSION["account"] = $account;
 
-        $sqlId = "select accountId from member where account = '$account'";   
-        $resultId = mysqli_query($link,$sqlId); 
-        $row["accountId"]= mysqli_fetch_assoc($resultId);
+        $sqlId = "select accountId from member where account = ?";
+        $resultId = $link->prepare($sqlId);
+        $resultId->execute(array("$account"));
+        $row["accountId"] = $resultId->fetch(PDO::FETCH_ASSOC);
+
+        // $sqlId = "select accountId from member where account = '$account'";   
+        // $resultId = mysqli_query($link,$sqlId); 
+        // $row["accountId"]= mysqli_fetch_assoc($resultId);
         $id = implode("",$row["accountId"]);                                            // 用使用者名稱查詢ID
         $_SESSION["accountId"] = $id;
+
 
         echo "<script>alert('歡迎登入');</script>";
         header("refresh:1;url=memberIndex.php");

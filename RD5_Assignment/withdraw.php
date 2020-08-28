@@ -27,10 +27,17 @@ if(isset($_POST["submitbtn"])){
         else{
             $sqlm = <<< sqlCommand
                 select money from memberBank
-                where accountId = $id;
+                where accountId = ?;
             sqlCommand;
-            $result = mysqli_query($link,$sqlm);
-            $row["money"] = mysqli_fetch_assoc($result);
+            $result = $link->prepare($sqlm);
+            $result->execute(array($id));
+            $row["money"] = $result->fetch(PDO::FETCH_ASSOC);
+            // $sqlm = <<< sqlCommand
+            //     select money from memberBank
+            //     where accountId = $id;
+            // sqlCommand;
+            // $result = mysqli_query($link,$sqlm);
+            // $row["money"] = mysqli_fetch_assoc($result);
             $money = implode("",$row["money"]);
             if($withdraw > $money){
                 echo "<script> alert('已到達提款上限，請重新填寫') </script>";      // 判斷是否超出原存款金額
@@ -38,16 +45,27 @@ if(isset($_POST["submitbtn"])){
             else{                                
                 $money -= $withdraw;
                 $sqlw = <<< sqlCommand
-                    UPDATE memberBank SET money = $money where accountId = $id
+                    UPDATE memberBank SET money = ? where accountId = ?
                 sqlCommand;
-                mysqli_query($link,$sqlw);                                  // 將memberBank資料更新
+                $result = $link->prepare($sqlw);
+                $result->execute(array($money,$id));
+                // $sqlw = <<< sqlCommand
+                //     UPDATE memberBank SET money = $money where accountId = $id
+                // sqlCommand;
+                // mysqli_query($link,$sqlw);                                  // 將memberBank資料更新
     
                 $date = date("Y-m-d");
                 $sqld = <<< sqlCommand
                     INSERT INTO accountDetail (accountId, type, moneyChange, dates, balance)
-                    VALUES ($id, 'withdraw', $withdraw, '$date', $money);
+                    VALUES (?, 'withdraw', ?, ?, ?);
                 sqlCommand;
-                mysqli_query($link,$sqld);                                  // 新增資料進accountdetail
+                $result = $link->prepare($sqld);
+                $result->execute(array($id,$withdraw,"$date",$money));
+                // $sqld = <<< sqlCommand
+                //     INSERT INTO accountDetail (accountId, type, moneyChange, dates, balance)
+                //     VALUES ($id, 'withdraw', $withdraw, '$date', $money);
+                // sqlCommand;
+                // mysqli_query($link,$sqld);                                  // 新增資料進accountdetail
     
                 echo "<script> alert('提款成功') </script>";
                 header("refresh:0.5;url='memberIndex.php'");

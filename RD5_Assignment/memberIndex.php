@@ -6,16 +6,19 @@ $userName=$_SESSION["account"];
 
 if(isset($_POST["moneybtn"])){
     $id = $_SESSION["accountId"];
-    // $sqlId = "select accountId from member where account = '$account'";   
-    // $resultId = mysqli_query($link,$sqlId); 
-    // $row["accountId"]= mysqli_fetch_assoc($resultId);
-    // $id = implode("",$row["accountId"]);                                            // 用使用者名稱查詢ID
-
+    
     $sql = <<< sqlCommand
-        SELECT money FROM memberBank WHERE accountId = $id;
+        SELECT money FROM memberBank WHERE accountId = ?;
     sqlCommand;
-    $result = mysqli_query($link,$sql);
-    $row["money"] = mysqli_fetch_assoc($result);
+    $result = $link->prepare($sql);
+    $result->execute(array($id));
+    $row["money"] = $result->fetch(PDO::FETCH_ASSOC);
+
+    // $sql = <<< sqlCommand
+    //     SELECT money FROM memberBank WHERE accountId = $id;
+    // sqlCommand;
+    // $result = mysqli_query($link,$sql);
+    // $row["money"] = mysqli_fetch_assoc($result);
     $money=implode("",$row["money"]);                   // 查詢餘額的值
     $money = number_format($money);                     // number_format($money); 三位一撇
     echo "<script> alert('剩餘金額為 $ NTD $money'); </script>";

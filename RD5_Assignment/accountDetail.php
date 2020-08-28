@@ -5,11 +5,17 @@ require("config.php");
 
 $id = $_SESSION["accountId"];
 $sql = <<<sqlCommand
-    SELECT * FROM accountDetail WHERE accountId = $id
+    SELECT * FROM accountDetail WHERE accountId = ?
     ORDER BY dates
 sqlCommand;
+$result = $link->prepare($sql);
+$result->execute(array($id));
 
-$result = mysqli_query($link,$sql);
+// $sql = <<<sqlCommand
+//     SELECT * FROM accountDetail WHERE accountId = $id
+//     ORDER BY dates
+// sqlCommand;
+//$result = mysqli_query($link,$sql);
 
 ?>
 
@@ -38,7 +44,29 @@ $result = mysqli_query($link,$sql);
             <td>餘額(NTD)</td>
 
             </tr>
-            <?php while($row = mysqli_fetch_assoc($result)){ ?>
+            <!-- <?php while($row = mysqli_fetch_assoc($result)){ ?>
+                <tr>
+                <td><?= $row["dates"] ?></td>
+                <td><?= $row["type"] ?></td>
+                <td><?= number_format($row["moneyChange"]) ?></td>
+                <td><?php
+                    $m =$row["balance"] % 1000;
+                    if($m<10){
+                        $balance = str_replace("00$m","***",number_format($row["balance"]));
+                    }
+                    else if($m<100){
+                        $balance = str_replace("0$m","***",number_format($row["balance"]));
+                    }
+                    else{
+                        $balance = str_replace($m,"***",number_format($row["balance"]));
+                    }
+                    
+                    echo $balance;
+                 ?></td>
+                </tr>
+            <?php } ?> -->
+
+            <?php while($row = $result->fetch(PDO::FETCH_ASSOC)){ ?>
                 <tr>
                 <td><?= $row["dates"] ?></td>
                 <td><?= $row["type"] ?></td>

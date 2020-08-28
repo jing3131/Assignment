@@ -1,8 +1,5 @@
 <?php
 
-// $link=mysqli_connect("localhost","root","root","RD1_Assignment");
-// $result = mysqli_query($link,"set names utf8");
-
 
 
 if(isset($_POST["submitbtn"])){
@@ -20,22 +17,39 @@ if(isset($_POST["submitbtn"])){
       require("config.php");
       $sqlAdd = <<< sqlCommand
         INSERT INTO member (name, account, password)
-        VALUES('$name','$account','$password');
-      sqlCommand;  
-      mysqli_query($link,$sqlAdd);                      // 新建帳戶
+        VALUES(?,?,?);
+      sqlCommand; 
+      $resultAdd = $link->prepare($sqlAdd);
+      $resultAdd->execute(array("$name","$account","$password"));
+      // $sqlAdd = <<< sqlCommand
+      //   INSERT INTO member (name, account, password)
+      //   VALUES('$name','$account','$password');
+      // sqlCommand;  
+      // mysqli_query($link,$sqlAdd);                      // 新建帳戶
 
       $sqlId= <<< sqlCommand
-        SELECT accountId from member where account = '$account'
+        SELECT accountId from member where account = ?
       sqlCommand;
-      $resultId = mysqli_query($link,$sqlId);
-      $row["accountId"] =mysqli_fetch_assoc($resultId);     // 找尋新建帳戶的ID
+      $resultId = $link->prepare($sqlId);
+      $resultId->execute(array($id));
+      $row["accountId"] = $resultId->fetch(PDO::FETCH_ASSOC);
+      // $sqlId= <<< sqlCommand
+      //   SELECT accountId from member where account = '$account'
+      // sqlCommand;
+      // $resultId = mysqli_query($link,$sqlId);
+      // $row["accountId"] =mysqli_fetch_assoc($resultId);     // 找尋新建帳戶的ID
       $id =implode("",$row["accountId"]);                   // 將陣列轉成字串
     
       // echo $id;
       $sqlAddBank = <<< sqlCommand
-        INSERT INTO memberBank (accountId, money) VALUES ($id,0);
+        INSERT INTO memberBank (accountId, money) VALUES (?,0);
       sqlCommand;
-      mysqli_query($link,$sqlAddBank);                // 新增帳戶銀行
+      $result = $link->prepare($sqlAddBank);
+      $result->execute(array($id));
+      // $sqlAddBank = <<< sqlCommand
+      //   INSERT INTO memberBank (accountId, money) VALUES ($id,0);
+      // sqlCommand;
+      // mysqli_query($link,$sqlAddBank);                // 新增帳戶銀行
       
       echo "<script>alert('註冊成功！')</script>";
       header("refresh:1;url=index.php");
