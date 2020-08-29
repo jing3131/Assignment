@@ -22,7 +22,7 @@ try{
         require("dataUpdate.php");
     }
     foreach($recordRain as $val){
-        // $dataTime = $val["time"]["obsTime"]; echo $dataTime;             // Insert Into
+        // $dataTime = $val["time"]["obsTime"]; //echo $dataTime;             // Insert Into
         // $locationName = $val["parameter"][0]["parameterValue"];
         // $locatedName = $val["locationName"];
     

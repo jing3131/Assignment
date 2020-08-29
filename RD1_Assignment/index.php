@@ -145,7 +145,7 @@ if (isset($_GET["oneDaysbtn"])) {
                         </table>
                     </div>
 
-                    <div class="col-2">
+                    <div class="col-1">
                         <div class="card" style="width:300px">
                             <div class="card-header bg-info">累計雨量</div>
                             <img class="card-img-top" src="image/<?= $locationId ?>.jpg">
@@ -170,9 +170,37 @@ if (isset($_GET["oneDaysbtn"])) {
                                 }
                             }
                             ?>
-                            <img class="card-img-top" src="image/<?= $locationId ?>-1.png">
-                        </div>
+                            <!-- <img class="card-img-top" src="image/<?= $locationId ?>-1.png"> -->
+                            <div class="card" style="width:300px">
+                            <div class="card-header bg-secondary">
+                                <?php  
+                                    $sqlName = "select locationName from location where locationId = $locationId";
+                                    $resultName = mysqli_query($link,$sqlName);
+                                    $row["locationName"] = mysqli_fetch_assoc($resultName);
+                                    echo implode("",$row["locationName"]);
+                                ?>
+                            </div>
+                            <div class="card-body">                                
+                                現在天氣：<hr>
+                                <?php
+                                    $sql = <<<sqlCommand
+                                        SELECT l.locationName, wdn.startTime, wdn.endTime, wdn.value FROM location as l
+                                        JOIN WeatherDescription AS wdn ON l.locationId = wdn.locationId
+                                        WHERE l.locationId = $locationId;
+                                    sqlCommand;
+                                    $resultNow = mysqli_query($link,$sql); 
+                                    $now = date("Y-m-d-m-s");
+                                    while($row = mysqli_fetch_assoc($resultNow)){
+                                        if($now > $row["startTime"] && $now < $row["endTime"]){
+                                            echo $row["value"];
+                                            break;
+                                        }                                    
+                                    }
+                                ?>
+                            </div>
+                        </div>                        
                     </div>
+
                     
                 </div>
 
