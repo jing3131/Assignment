@@ -1,0 +1,32 @@
+CREATE DATABASE PID_Assignment DEFAULT CHARACTER SET utf8;
+USE PID_Assignment;
+
+# 新建帳戶資料
+CREATE TABLE account(
+	accountId int AUTO_INCREMENT PRIMARY KEY,
+    name varchar(30) NOT null,
+    account varchar(50) NOT null,
+    `password` varchar(20) NOT null,
+    creditCard varchar(30),
+    address varchar(50)
+);
+
+INSERT INTO account (name, account, `password`, creditCard, address)
+VALUES('chh', 'QQ', 'pass',null,null);
+
+CREATE TABLE manager (
+    managerId int AUTO_INCREMENT PRIMARY KEY,
+    account varchar(30) not null,
+    `password` varchar(30) not null
+);
+
+INSERT INTO manager (account, `password`)
+VALUES ("WW", "1234");
+
+CREATE TABLE product(
+    productId int AUTO_INCREMENT PRIMARY KEY,
+    managerId int not null,
+    productName varchar(30) not null,
+    productText varchar(100) not null,
+    productPic LONGBLOB
+);

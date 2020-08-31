@@ -3,23 +3,18 @@
 session_start();
 require("../config.php");
 
-if(isset($_POST["signupbtn"])){
-    header("Location: signup.php");
-    exit();
-}
-
 if(isset($_POST["loginbtn"])){
     $account = $_POST["accountTF"];
     $password = $_POST["passwordTF"];
 
-    $sqlAcc = "select account from account where account = ? ";
+    $sqlAcc = "select account from manager where account = ? ";
     $resultAcc = $link->prepare($sqlAcc);
     $resultAcc->execute(array($account));
 
 
     $row["account"] = $resultAcc->fetch(PDO::FETCH_ASSOC);
 
-    $sqlPwd = "select `password` from account where account = ? and `password` = ?";
+    $sqlPwd = "select `password` from manager where account = ? and `password` = ?";
     $resultPwd = $link->prepare($sqlPwd);
     $resultPwd->execute(array("$account","$password"));
     $row["password"] = $resultPwd->fetch(PDO::FETCH_ASSOC);         // 確認密碼正確與否
@@ -35,22 +30,21 @@ if(isset($_POST["loginbtn"])){
         echo "<script>alert('帳號或密碼錯誤');</script>";
     }
     else{
-        $_SESSION["account"] = $account;
+        $_SESSION["accountManager"] = $account;
 
-        $sqlId = "select accountId from account where account = ?";
+        $sqlId = "select managerId from manager where account = ?";
         $resultId = $link->prepare($sqlId);
         $resultId->execute(array("$account"));
-        $row["accountId"] = $resultId->fetch(PDO::FETCH_ASSOC);
+        $row["managerId"] = $resultId->fetch(PDO::FETCH_ASSOC);
 
-        $id = implode("",$row["accountId"]);                                            // 用使用者名稱查詢ID
-        $_SESSION["accountId"] = $id;
+        $id = implode("",$row["managerId"]);                                            // 用使用者名稱查詢ID
+        $_SESSION["accountIdManager"] = $id;
 
 
         echo "<script>alert('歡迎登入');</script>";
-        header("refresh:1;url=Index.php");
+        header("refresh:1;url=index.php");
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -86,11 +80,7 @@ if(isset($_POST["loginbtn"])){
             </div> 
             <div class="form-group row">                
                 <div class="col-10" style="text-align:right"><button name="loginbtn" type="submit" class="btn btn-outline-primary">登入</button> </div>
-            </div>      
-            <div class="form-group row">
-                <label class="col-4 col-form-label">註冊/Signup</label>
-                <button name="signupbtn" type="submit" class="btn btn-outline-success">GoSignup</button>                
-            </div>            
+            </div>                
 
         </form>
     </div>

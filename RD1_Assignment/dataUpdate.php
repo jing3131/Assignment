@@ -6,6 +6,7 @@
 // $itemId =1;
 
 $locationName = $val["locationName"];        // 地區
+// echo $locationName;
 
 foreach($val["weatherElement"] as $element){
     $elementName =$element["elementName"];                  // elementName
@@ -13,10 +14,11 @@ foreach($val["weatherElement"] as $element){
         select locationId from location
         where locationName = '$locationName'
     sqlCommand;
+    // echo $sqlId;
     $result = mysqli_query($link,$sqlId);
-    $row["locationId"] = mysqli_fetch_assoc($result);
+    $row["locationId"] = mysqli_fetch_assoc($result); //print_r($result);
     $id = implode("",$row["locationId"]);                   // id
-    //echo $id;
+    //echo $id."id";
               
     foreach($element["time"] as $time){
         $values =$time["elementValue"][0]["value"];
