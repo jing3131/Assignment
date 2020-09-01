@@ -88,25 +88,25 @@ if(isset($_POST["submitbtn"])){
       <div class="form-group row">
         <label for="nameTF" class="col-4 col-form-label">姓名/Name</label> 
           <div class="col-6">
-            <input id="nameTF" name="nameTF" type="text" class="form-control" require>
+            <input id="nameTF" name="nameTF" type="text" class="form-control" required>
           </div>
       </div>
       <div class="form-group row">
         <label for="accountTF" class="col-4 col-form-label">帳號/Account</label> 
           <div class="col-6">
-            <input id="accountTF" name="accountTF" type="text" class="form-control" require>
+            <input id="accountTF" name="accountTF" type="text" class="form-control" required>
           </div>
       </div>
       <div class="form-group row">
         <label for="passwordTF" class="col-4 col-form-label">密碼/Password</label> 
           <div class="col-6">
-            <input id="passwordTF" name="passwordTF" type="password" class="form-control" require>
+            <input id="passwordTF" name="passwordTF" type="password" class="form-control" required>
           </div>
       </div> 
       <div class="form-group row">
         <label for="passwordTF" class="col-4 col-form-label">再輸入一次密碼</label> 
           <div class="col-6">
-            <input id="password2TF" name="password2TF" type="password" class="form-control" require>
+            <input id="password2TF" name="password2TF" type="password" class="form-control" required>
           </div>
       </div> 
       <div class="form-group row">

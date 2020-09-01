@@ -2,14 +2,22 @@
 session_start();
 if(isset($_SESSION["accountManager"])){
     $userName = $_SESSION["accountManager"];
-    if(isset($_POST["addbtn"])){
-        header("Location: addItem.php");
-        exit();
-    }
-    if(isset($_POST["updatebtn"])){
-        header("Location: updateItem.php");
-        exit();
-    }
+//     if(isset($_POST["addbtn"])){
+//         header("Location: addItem.php");
+//         exit();
+//     }
+//     if(isset($_POST["updatebtn"])){
+//         header("Location: item.php");
+//         exit();
+//     }
+//     if(isset($_POST["orderbtn"])){
+//         header("Location: order.php");
+//         exit();
+//     }
+//     if(isset($_POST["memberbtn"])){
+//         header("Location: member.php");
+//         exit();
+//     }
 }
 if($_GET["logout"]){
     unset($_SESSION["accountManager"]);
@@ -24,6 +32,9 @@ sqlCommand;
 $result = $link->prepare($sql);
 $result->execute(array($id));
 
+// while($row = $result->fetchAll()){
+//     $pic = base64_encode($row["productPic"]);
+// }
 
 ?>
 
@@ -37,8 +48,45 @@ $result->execute(array($id));
 </head>
 <body>
     
+<nav class="navbar navbar-expand-sm bg-light navbar-light">
+    <ul class="navbar-nav">
+        
+        <?php if(isset($_SESSION["accountManager"])) { ?>
+            <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
+            <li class="nav-item">
+                <a class="nav-link" href="index.php?logout=1"> 登出 </a>
+            </li>
 
-    <div class="container">
+            <span class="navbar-text" style="margin-left:70px;">商品管理</span>
+            <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark" href="addItem.php"style="margin-left:30px;">新增商品</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark" href="Item.php"style="margin-left:10px;">修改/刪除商品</a>
+            </li>
+
+            <span class="navbar-text" style="margin-left:70px;">會員管理</span>
+            <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark" href="order.php"style="margin-left:30px;">訂單管理</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark" href="member.php"style="margin-left:10px;">會員列表</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark" href="index.php"style="margin-left:50px;">首頁</a>
+            </li>
+
+        <?php } else{ ?>
+            <span class="navbar-text" >請先登入</span>
+            <li class="nav-item">
+                <a class="nav-link" href="login.php"> 登入 </a>
+            </li>
+        <?php } ?>
+        
+    </ul>
+</nav>
+
+    <div class="container"><br>
         <!-- <div class="row">
             <div class="col-4">
             <img src="https://c.ecimg.tw/items/DBAA00A900536FU/000002_1596626402.jpg" style="width:150px" id="item1"><br>
@@ -47,59 +95,40 @@ $result->execute(array($id));
             <div class="col-4">546</div>
             <div class="col-4">21</div>
         </div> -->
-        <?php if(isset($_SESSION["accountManager"])) { ?>
+        <!-- <?php if(isset($_SESSION["accountManager"])) { ?>
             歡迎登入： <?= $userName ?>
             <a href="index.php?logout=1" style="margin-left:70px">登出</a>
         <?php } else{ ?>
             請先登入
             <button type="submit" name="loginbtn" id="loginbtn" onclick="window.location='login.php'">登入</button>
-        <?php } ?>
+        <?php } ?> -->
 
 
-        <form action="" method="post">
-            <button type="submit" name="addbtn" id="addbtn">新增商品</button>
-            <button type="submit" name="updatebtn" id="updatebtn">修改/刪除商品</button>
-        </form>
-        <!-- <table width="300" cellpadding="50">
-            <tr>
-                <td > <img src="https://c.ecimg.tw/items/DBAA00A900536FU/000002_1596626402.jpg" style="width:150px"></td>   //style="padding:8px;"
-                <td > <img src="https://c.ecimg.tw/items/DBAA00A900536FU/000002_1596626402.jpg" style="width:150px"></td>
-                <td > <img src="https://c.ecimg.tw/items/DBAA00A900536FU/000002_1596626402.jpg" style="width:150px"></td>
-            </tr>
-            <tr>
-                <td align="center"><a href="https://www.google.com"> QQQ</a></td>
-                <td align="center">QQQ</td>
-                <td align="center">QQQ</td>
-            </tr>
-            <tr>
-                <td> <img src="https://c.ecimg.tw/items/DBAA00A900536FU/000002_1596626402.jpg" style="width:150px"></td>
-                <td> <img src="https://c.ecimg.tw/items/DBAA00A900536FU/000002_1596626402.jpg" style="width:150px"></td>
-                <td> <img src="https://c.ecimg.tw/items/DBAA00A900536FU/000002_1596626402.jpg" style="width:150px"></td>
-            </tr>
-            <tr>
-                <td align="center">QQQ</td>
-                <td align="center">QQQ</td>
-                <td align="center">QQQ</td>
-            </tr>
-        </table> -->
-        <table width="300" cellpadding="50">
-            <tr>
-                <td > 
-                    <!-- <img src="" style="width:150px"> -->
-                    <?php 
-                        // list($a,$img) = $result->fetch(PDO::FETCH_NUM);
-                        // header("Content-Type:image/jpeg");
-                        // echo $image;
-                        while ($row = $result->fetch(PDO::FETCH_ASSOC)){
-                            echo $row["productName"];
-                        }
-                     ?>
-                </td> 
-            </tr>
-            <tr>
-                <td align="center"><a href="https://www.google.com"> QQQ</a></td>
-            </tr>
-        </table>
+        <!-- <form action="" method="post"><br>
+            <div class="col-12">
+                <span>
+                    <label for="">商品管理</label>
+                    <button type="submit" name="addbtn" id="addbtn" class="btn btn-outline-dark">新增商品</button>
+                    <button type="submit" name="updatebtn" id="updatebtn" class="btn btn-outline-dark">修改/刪除商品</button>
+                </span>
+                <span style="padding:50px">
+                    <label for="">會員管理</label>
+                    <button type="submit" name="orderbtn" id="orderbtn" class="btn btn-outline-dark">訂單管理</button>
+                    <button type="submit" name="memberbtn" id="memberbtn" class="btn btn-outline-dark">會員列表</button>
+                </span>
+            </div>
+            
+        </form> -->
+
+        <div class="row">
+            <?php foreach($result->fetchAll() as $row) { ?>
+                <?php $pic = base64_encode($row["productPic"]); ?>
+                <div class="col-3">
+                <div class=row><img src="data:image/jpeg;base64, <?= $pic ?>" style="width:150px" id="img"></td></div>
+                <div class=row><a href="../productDetail.php?id=<?= $row["productId"] ?>"><?= $row["productName"]; ?></a></div>
+            </div>    
+            <?php } ?>       
+        </div>
     </div>
 </body>
 </html>

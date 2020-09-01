@@ -37,17 +37,23 @@ if(isset($_POST["loginbtn"])){
     else{
         $_SESSION["account"] = $account;
 
-        $sqlId = "select accountId from account where account = ?";
+        $sqlId = "select accountId, canUse from account where account = ?";
         $resultId = $link->prepare($sqlId);
         $resultId->execute(array("$account"));
-        $row["accountId"] = $resultId->fetch(PDO::FETCH_ASSOC);
+        $row= $resultId->fetch(PDO::FETCH_ASSOC);
+        
+        if($row["canUse"] == "N"){
+            unset($_SESSION["account"]);
+            echo "<script>alert('此帳號目前被停用，請聯絡客服');</script>";
+        }
 
-        $id = implode("",$row["accountId"]);                                            // 用使用者名稱查詢ID
-        $_SESSION["accountId"] = $id;
+        else{            
+            $id = $row["accountId"];                                           // 用使用者名稱查詢ID
+            $_SESSION["accountId"] = $id;
 
-
-        echo "<script>alert('歡迎登入');</script>";
-        header("refresh:1;url=Index.php");
+            echo "<script>alert('歡迎登入');</script>";
+            header("refresh:1;url=Index.php");
+        }
     }
 }
 

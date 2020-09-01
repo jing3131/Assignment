@@ -8,7 +8,8 @@ CREATE TABLE account(
     account varchar(50) NOT null,
     `password` varchar(20) NOT null,
     creditCard varchar(30),
-    address varchar(50)
+    address varchar(50),
+    canUse  enum('Y','N')
 );
 
 INSERT INTO account (name, account, `password`, creditCard, address)
@@ -28,5 +29,11 @@ CREATE TABLE product(
     managerId int not null,
     productName varchar(30) not null,
     productText varchar(100) not null,
-    productPic LONGBLOB
+    productPic LONGBLOB,
+    productPrice int not null,
+    productQuantity int not null
 );
+
+
+src="data:image/jpeg;base64"
+

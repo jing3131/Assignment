@@ -13,11 +13,11 @@ if(isset($_POST["submitbtn"])){
     }
     else{
       $sql = <<<sqlCommand
-        INSERT INTO account (name, account, `password`, creditCard, address)
-        VALUES(?,?,?,?,?);
+        INSERT INTO account (name, account, `password`, creditCard, address, canUse)
+        VALUES(?,?,?,?,?,?);
       sqlCommand;
       $result = $link->prepare($sql);
-      $result->execute(array($name, $account, $password, $credit, $address));
+      $result->execute(array($name, $account, $password, $credit, $address, 'Y'));
 
       echo "<script>alert('註冊成功！')</script>";
       header("refresh:0.5;url=index.php");

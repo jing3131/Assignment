@@ -2,29 +2,37 @@
 session_start();
 $fp; $buf;
 if(isset($_POST["submitbtn"])){
-    if($_POST["ItemNameTF"]!=null && $_POST["Itemtextarea"]!=null){
+    $price = $_POST["priceTF"];
+    $quantity = $_POST["quantityTF"];
+    if(!is_numeric($price) || $price <= 0 || !is_numeric($quantity) || $quantity <= 0){
+        echo "<script>alert('請輸入正整數');</script>";
+    }
+    else if($_POST["ItemNameTF"]!=null && $_POST["Itemtextarea"]!=null){
         $ItemName = $_POST["ItemNameTF"];
         $Itemtext = $_POST["Itemtextarea"];
         $id = $_SESSION["accountIdManager"]; //echo $id."id";
+        
+        //$fp = fopen($_FILES['ImgFileInput']['tmp_name'],'rb');         //  讀寫打開一個二進制文件，允許讀寫數據，文件必須存在
+        //$imgBlob = addslashes(fread($fp,$_FILES['ImgFileInput']['size']));      // addslashes在 " 前加 /    fread讀取文件
+        $imgBlob =addslashes(file_get_contents($_FILES['ImgFileInput']['tmp_name']));
+        //fclose($fp);
+
+        require("../config.php");
+
+        $sql = <<<sqlCommand
+            INSERT INTO product (managerId, productName, productText, productPic, productPrice, productQuantity)
+            VALUES (?,?,?,?,?,?)
+        sqlCommand;
+        $result = $link->prepare($sql);
+        $result->execute(array($id, "$ItemName", "$Itemtext", "$imgBlob", $price, $quantity));
+
+        echo "<script>alert('新增成功！')</script>";
+        header("refresh:0.5;url='index.php'");
+        exit();
     }
 
     
-    $fp = fopen($_FILES['ImgFileInput']['tmp_name'],'rb');         //  讀寫打開一個二進制文件，允許讀寫數據，文件必須存在
-    $buf = addslashes(fread($fp,$_FILES['ImgFileInput']['size']));      // addslashes在 " 前加 /    fread讀取文件
-    fclose($fp);
-
-    require("../config.php");
-
-    $sql = <<<sqlCommand
-        INSERT INTO product (managerId, productName, productText, productPic)
-        VALUES (?,?,?,?)
-    sqlCommand;
-    $result = $link->prepare($sql);
-    $result->execute(array($id, "$ItemName", "$Itemtext", "$buf"));
-
-    echo "<script>alert('新增成功！')</script>";
-    header("refresh:0.5;url='index.php'");
-    exit();
+    
 }
 if(isset($_POST["cancelbtn"])){
     header("Location: index.php");
@@ -41,7 +49,7 @@ if(isset($_POST["cancelbtn"])){
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="../bootstrap-4.5.2-dist/css/bootstrap.css" rel="stylesheet" >
-    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="../jquery.js"></script>
     <!-- <style>
     .upload_cover {
         position: relative;
@@ -69,8 +77,72 @@ if(isset($_POST["cancelbtn"])){
         top: 2px;
     }
     </style> -->
+    <style> 
+    input[type=number] { 
+        height: 30px; 
+        line-height: 30px; 
+        font-size: 16px; 
+        padding: 0 8px; 
+    } 
+    input[type=number]::-webkit-inner-spin-button { 
+        -webkit-appearance: none; 
+        cursor:pointer; 
+        display:block; 
+        width:8px; 
+        color: #333; 
+        text-align:center; 
+        position:relative; 
+    }  
+    input[type=number]:hover::-webkit-inner-spin-button { 
+        background: #eee url('http://i.stack.imgur.com/YYySO.png') no-repeat 50% 50%; 
+        width: 14px; 
+        height: 14px; 
+        padding: 4px; 
+        position: relative; 
+        right: 4px; 
+        border-radius: 28px; 
+    } 
+    </style> 
+
 </head>
 <body>
+<nav class="navbar navbar-expand-sm bg-light navbar-light">
+    <ul class="navbar-nav">
+        
+        <?php if(isset($_SESSION["accountManager"])) { ?>
+            <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
+            <li class="nav-item">
+                <a class="nav-link" href="index.php?logout=1"> 登出 </a>
+            </li>
+
+            <span class="navbar-text" style="margin-left:70px;">商品管理</span>
+            <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark" href="addItem.php"style="margin-left:30px;">新增商品</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark" href="Item.php"style="margin-left:10px;">修改/刪除商品</a>
+            </li>
+
+            <span class="navbar-text" style="margin-left:70px;">會員管理</span>
+            <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark" href="order.php"style="margin-left:30px;">訂單管理</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark" href="member.php"style="margin-left:10px;">會員列表</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link btn btn-outline-dark" href="index.php"style="margin-left:50px;">首頁</a>
+            </li>
+
+        <?php } else{ ?>
+            <span class="navbar-text" >請先登入</span>
+            <li class="nav-item">
+                <a class="nav-link" href="login.php"> 登入 </a>
+            </li>
+        <?php } ?>
+        
+    </ul>
+</nav>
     <div class="container"> <br>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -89,6 +161,21 @@ if(isset($_POST["cancelbtn"])){
             </div>
         </div> 
 
+
+        <div class="form-group row">
+            <div class="col-1"><label for="quantity">數量</label></div>
+            <div class="offset-1 col-2">
+                <input type="number" name="quantityTF" min="0" max="100" value="0" required>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <div class="col-1"><label for="price">金額</label></div>
+            <div class="offset-1 col-2">
+                <input type="text" name="priceTF" value="0" required>
+            </div>
+        </div>
+
         <div class="form-group row">
             <section class="button-box">
                 <input id="ImgFileInput" name="ImgFileInput" type="file" accept="image/*" class="btn btn-outline-light">
@@ -101,11 +188,14 @@ if(isset($_POST["cancelbtn"])){
                 <img id="file_thumbnail">
             </figure>
         </div>
+       
         <div class="form-group row">
             <div class="offset-4 col-4" style="margin-left:865px">
             <button name="submitbtn" id="submitbtn" type="submit" class="btn btn-outline-primary">確定</button>
+            </div>
             <!-- <button name="cancelbtn" id="cancelbtn" type="submit" class="btn btn-outline-warning">取消</button> -->
         </div>
+
     </form>
         <!-- <label class="upload_cover">
         <input id="upload_input" type="file" onchange="handleFiles(this.files)" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">
@@ -122,9 +212,7 @@ if(isset($_POST["cancelbtn"])){
         </form> -->
 
 
-        
-       
-       
+
 
 
     </div>
