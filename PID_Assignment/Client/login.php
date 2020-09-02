@@ -52,9 +52,15 @@ if(isset($_POST["loginbtn"])){
             $_SESSION["accountId"] = $id;
 
             echo "<script>alert('歡迎登入');</script>";
-            header("refresh:1;url=Index.php");
+            header("refresh:1;url=../index.php");
         }
     }
+}
+
+if ($_GET["logout"]) {
+    unset($_SESSION["account"]);
+    unset($_SESSION["accountId"]);
+    header("Location: ../index.php");
 }
 
 ?>

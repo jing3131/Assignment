@@ -14,12 +14,12 @@ if ($_GET["logout"]) {
 }
 
 require("../config.php");
-$id = $_SESSION["accountIdManager"];
+$id = $_SESSION["accountId"];
 $sql = <<<sqlCommand
-    select * from product where managerId = ?;
+    select * from product;
 sqlCommand;
 $result = $link->prepare($sql);
-$result->execute(array($id));
+$result->execute();
 
 ?>
 
@@ -56,14 +56,13 @@ $result->execute(array($id));
     <div class="container">
         <br>
         <div class="row">
-            <?php foreach ($result->fetchAll() as $row) { ?>
-                <?php $pic = base64_encode($row["productPic"]); ?>
+            <?php foreach($result->fetchAll() as $row) { ?>
+                <?php //$pic = base64_encode($row["productPic"]); ?>
                 <div class="col-3">
-                    <div class=row><img src="data:image/jpeg;base64, <?= $pic ?>" style="width:150px" id="img"></td>
-                    </div>
-                    <div class=row><?= $row["productName"]; ?></div>
-                </div>
-            <?php } ?>
+                <div class=row><img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" style="width:150px;height:150px" id="img"></td></div>
+                <div class=row><a href="../productDetail.php?id=<?= $row["productId"] ?>"><?= $row["productName"]; ?></a></div>
+            </div>    
+            <?php } ?>       
         </div>
     </div>
 

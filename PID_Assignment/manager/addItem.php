@@ -1,6 +1,7 @@
 <?php
 session_start();
 $fp; $buf;
+
 if(isset($_POST["submitbtn"])){
     $price = $_POST["priceTF"];
     $quantity = $_POST["quantityTF"];
@@ -12,10 +13,14 @@ if(isset($_POST["submitbtn"])){
         $Itemtext = $_POST["Itemtextarea"];
         $id = $_SESSION["accountIdManager"]; //echo $id."id";
         
-        //$fp = fopen($_FILES['ImgFileInput']['tmp_name'],'rb');         //  讀寫打開一個二進制文件，允許讀寫數據，文件必須存在
-        //$imgBlob = addslashes(fread($fp,$_FILES['ImgFileInput']['size']));      // addslashes在 " 前加 /    fread讀取文件
-        $imgBlob =addslashes(file_get_contents($_FILES['ImgFileInput']['tmp_name']));
-        //fclose($fp);
+        // $fp = fopen($_FILES['ImgFileInput']['tmp_name'],'rb');         //  讀寫打開一個二進制文件，允許讀寫數據，文件必須存在
+        // $imgBlob = addslashes(fread($fp,$_FILES['ImgFileInput']['size']));      // addslashes在 " 前加 /    fread讀取文件        
+        // fclose($fp);
+        //$imgBlob =addslashes(file_get_contents($_FILES['ImgFileInput']['tmp_name']));
+        $tmpName =$_FILES['ImgFileInput']['tmp_name'];
+        $fp = fopen($tmpName,"r");
+        $file_img = fread($fp,filesize(($tmpName)));
+        $img64 = base64_encode($file_img);        
 
         require("../config.php");
 
@@ -24,7 +29,8 @@ if(isset($_POST["submitbtn"])){
             VALUES (?,?,?,?,?,?)
         sqlCommand;
         $result = $link->prepare($sql);
-        $result->execute(array($id, "$ItemName", "$Itemtext", "$imgBlob", $price, $quantity));
+        $result->execute(array($id, "$ItemName", "$Itemtext", "$img64", $price, $quantity));
+        fclose($fp);
 
         echo "<script>alert('新增成功！')</script>";
         header("refresh:0.5;url='index.php'");
@@ -112,7 +118,7 @@ if(isset($_POST["cancelbtn"])){
         <?php if(isset($_SESSION["accountManager"])) { ?>
             <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
             <li class="nav-item">
-                <a class="nav-link" href="index.php?logout=1"> 登出 </a>
+                <a class="nav-link" href="login.php?logout=1"> 登出 </a>
             </li>
 
             <span class="navbar-text" style="margin-left:70px;">商品管理</span>
@@ -131,7 +137,7 @@ if(isset($_POST["cancelbtn"])){
             <a class="nav-link btn btn-outline-dark" href="member.php"style="margin-left:10px;">會員列表</a>
             </li>
             <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="index.php"style="margin-left:50px;">首頁</a>
+            <a class="nav-link btn btn-outline-dark" href="../index.php"style="margin-left:50px;">首頁</a>
             </li>
 
         <?php } else{ ?>

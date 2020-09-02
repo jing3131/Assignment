@@ -26,7 +26,7 @@ $result->execute();
         <?php if(isset($_SESSION["accountManager"])) { ?>
             <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
             <li class="nav-item">
-                <a class="nav-link" href="index.php?logout=1"> 登出 </a>
+                <a class="nav-link" href="login.php?logout=1"> 登出 </a>
             </li>
 
             <span class="navbar-text" style="margin-left:70px;">商品管理</span>
@@ -45,7 +45,7 @@ $result->execute();
             <a class="nav-link btn btn-outline-dark" href="member.php"style="margin-left:10px;">會員列表</a>
             </li>
             <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="index.php"style="margin-left:50px;">首頁</a>
+            <a class="nav-link btn btn-outline-dark" href="../index.php"style="margin-left:50px;">首頁</a>
             </li>
 
         <?php } else{ ?>

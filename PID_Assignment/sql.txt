@@ -34,6 +34,21 @@ CREATE TABLE product(
     productQuantity int not null
 );
 
+CREATE TABLE shoppingCar(
+    accountId int not null,
+    productName varchar(30) not null,
+    quantity int not null,
+    #credit varchar(50),
+    #address varchar(50)
+);
 
-src="data:image/jpeg;base64"
+CREATE TABLE orderDetail (
+    accountId int not null,
+    productName varchar(30) not null,
+    quantity int not null,
+    deliveryTo varchar(30) not null,
+    address varchar(50) not null,
+    pay varchar(30) not null,
+    creditCard varchar(30)
+);
 

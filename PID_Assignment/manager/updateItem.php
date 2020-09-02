@@ -1,10 +1,11 @@
 <?php
-
-if(!isset($_GET["id"])){
+session_start();
+$userName = $_SESSION["accountManager"];
+if (!isset($_GET["id"])) {
     die("id not found");
 }
 $id = $_GET["id"];
-if(!is_numeric($id)){
+if (!is_numeric($id)) {
     die("id not a number");
 }
 
@@ -18,11 +19,11 @@ $result = $link->prepare($sql);
 $result->execute(array($id));
 $row = $result->fetch(PDO::FETCH_ASSOC);
 
-if(isset($_POST["submitbtn"])){
+if (isset($_POST["submitbtn"])) {
     $productName = $_POST["ItemNameTF"];    // echo $productName."name"; 
     $productText = $_POST["Itemtextarea"];  // echo $productText."text";
-    $fp = fopen($_FILES['ImgFileInput']['tmp_name'],"rb");
-    $pic = addslashes(fread($fp,$_FILES['ImgFileInput']['size']));
+    $fp = fopen($_FILES['ImgFileInput']['tmp_name'], "rb");
+    $pic = addslashes(fread($fp, $_FILES['ImgFileInput']['size']));
     fclose($fp);
     $sql = <<<sqlCommand
         UPDATE product SET productName = ?, productText = ?, productPic= ?
@@ -46,73 +47,111 @@ if(isset($_POST["submitbtn"])){
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="../bootstrap-4.5.2-dist/css/bootstrap.css" rel="stylesheet" >
+    <link href="../bootstrap-4.5.2-dist/css/bootstrap.css" rel="stylesheet">
 </head>
 
 <body>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
+    <nav class="navbar navbar-expand-sm bg-light navbar-light">
+        <ul class="navbar-nav">
+
+            <?php if (isset($_SESSION["accountManager"])) { ?>
+                <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
+                <li class="nav-item">
+                    <a class="nav-link" href="login.php?logout=1"> 登出 </a>
+                </li>
+
+                <span class="navbar-text" style="margin-left:70px;">商品管理</span>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-dark" href="addItem.php" style="margin-left:30px;">新增商品</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-dark" href="Item.php" style="margin-left:10px;">修改/刪除商品</a>
+                </li>
+
+                <span class="navbar-text" style="margin-left:70px;">會員管理</span>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-dark" href="order.php" style="margin-left:30px;">訂單管理</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-dark" href="member.php" style="margin-left:10px;">會員列表</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link btn btn-outline-dark" href="../index.php" style="margin-left:50px;">首頁</a>
+                </li>
+
+            <?php } else { ?>
+                <span class="navbar-text">請先登入</span>
+                <li class="nav-item">
+                    <a class="nav-link" href="login.php"> 登入 </a>
+                </li>
+            <?php } ?>
+
+        </ul>
+    </nav>
+
     <div class="container"> <br>
-    <form method="post" class="needs-validation"  enctype="multipart/form-data">
-        <div class="form-group row">
-            <label for="ItemNameTF" class="col-4 col-form-label">商品名稱</label> 
-            <div class="col-6">
-            <input id="ItemNameTF" name="ItemNameTF" placeholder="請輸入商品名稱" type="text" class="form-control" value="<?= $row["productName"] ?>" required>
+        <form method="post" class="needs-validation" enctype="multipart/form-data">
+            <div class="form-group row">
+                <label for="ItemNameTF" class="col-4 col-form-label">商品名稱</label>
+                <div class="col-6">
+                    <input id="ItemNameTF" name="ItemNameTF" placeholder="請輸入商品名稱" type="text" class="form-control" value="<?= $row["productName"] ?>" required>
+                </div>
             </div>
-        </div>
-        <div class="form-group row">
-            <label for="Itemtextarea" class="col-4 col-form-label">商品描述</label> 
-            <div class="col-6">
-                <textarea id="Itemtextarea" name="Itemtextarea" cols="40" rows="5" class="form-control" required> <?= $row["productText"]?> </textarea>
+            <div class="form-group row">
+                <label for="Itemtextarea" class="col-4 col-form-label">商品描述</label>
+                <div class="col-6">
+                    <textarea id="Itemtextarea" name="Itemtextarea" cols="40" rows="5" class="form-control" required> <?= $row["productText"] ?> </textarea>
+                </div>
             </div>
-        </div> 
 
 
-        <div class="form-group row">
-            <div class="col-1"><label for="quantity">數量</label></div>
-            <div class="offset-1 col-2">
-                <input type="number" name="quantityTF" min="0" max="100" value="<?= $row["productQuantity"] ?>" required>
+            <div class="form-group row">
+                <div class="col-1"><label for="quantity">數量</label></div>
+                <div class="offset-1 col-2">
+                    <input type="number" name="quantityTF" min="0" max="100" value="<?= $row["productQuantity"] ?>" required>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <div class="col-1"><label for="price">金額</label></div>
-            <div class="offset-1 col-2">
-                <input type="text" name="priceTF" value="<?= $row["productPrice"] ?>" required>
+            <div class="form-group row">
+                <div class="col-1"><label for="price">金額</label></div>
+                <div class="offset-1 col-2">
+                    <input type="text" name="priceTF" value="<?= $row["productPrice"] ?>" required>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <section class="button-box">
-                <input id="ImgFileInput" name="ImgFileInput" type="file" accept="image/*" class="btn btn-outline-light">
-                <!-- <label for="customFileInput" class="button-primary">
+            <div class="form-group row">
+                <section class="button-box">
+                    <input id="ImgFileInput" name="ImgFileInput" type="file" accept="image/*" class="btn btn-outline-light">
+                    <!-- <label for="customFileInput" class="button-primary">
                 <img class="icon" src="../add.jpg" alt="上傳檔案" width="50px">
                 <span>選擇檔案按鈕</span>
                 </label> -->
-            </section>
-            <figure>
-                <img id="file_thumbnail">
-            </figure>
-        </div>
-       
-        <div class="form-group row">
-            <div class="offset-4 col-4" style="margin-left:865px">
-            <button name="submitbtn" id="submitbtn" type="submit" class="btn btn-outline-primary">確定</button>
+                </section>
+                <figure>
+                    <img id="file_thumbnail">
+                </figure>
             </div>
-            <!-- <button name="cancelbtn" id="cancelbtn" type="submit" class="btn btn-outline-warning">取消</button> -->
-        </div>
 
-    </form>
+            <div class="form-group row">
+                <div class="offset-4 col-4" style="margin-left:865px">
+                    <button name="submitbtn" id="submitbtn" type="submit" class="btn btn-outline-primary">確定</button>
+                </div>
+                <!-- <button name="cancelbtn" id="cancelbtn" type="submit" class="btn btn-outline-warning">取消</button> -->
+            </div>
+
+        </form>
     </div>
 
     <script>
         var inputFile = document.getElementById('ImgFileInput');
-        inputFile.addEventListener('change',function(e){
+        inputFile.addEventListener('change', function(e) {
             var fileData = e.target.files[0];
             console.log(fileData);
             document.getElementById('file_thumbnail').src = URL.createObjectURL(fileData);
-        },false);
+        }, false);
     </script>
 </body>
 

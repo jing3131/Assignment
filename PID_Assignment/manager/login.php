@@ -42,8 +42,14 @@ if(isset($_POST["loginbtn"])){
 
 
         echo "<script>alert('歡迎登入');</script>";
-        header("refresh:1;url=index.php");
+        header("refresh:1;url=../index.php");
     }
+}
+
+if ($_GET["logout"]) {
+    unset($_SESSION["accountManager"]);
+    unset($_SESSION["accountIdManager"]);
+    header("Location: ../index.php");
 }
 ?>
 
