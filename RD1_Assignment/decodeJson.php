@@ -37,7 +37,7 @@ try{
         // foreach($val["weatherElement"] as $v){
         //     $elementName = $v["elementName"];
         //     $values = $v["elementValue"];
-        //     if($elementName == "NOW" || $elementName == "HOUR_24"){
+        //     if($elementName == "RAIN" || $elementName == "HOUR_24"){
                 
     
         //     $sql = <<<sqlCommand
@@ -65,7 +65,7 @@ try{
         foreach($val["weatherElement"] as $v){
             $elementName = $v["elementName"];                           // type
             $values = $v["elementValue"];                               // rainMm
-            if($elementName == "NOW" || $elementName == "HOUR_24"){                
+            if($elementName == "RAIN" || $elementName == "HOUR_24"){                
     
             $sql = <<<sqlCommand
                 UPDATE rain SET rainMm = $values WHERE locatedName = '$locatedName' AND type = '$elementName'
