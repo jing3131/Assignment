@@ -158,7 +158,7 @@ if (isset($_GET["oneDaysbtn"])) {
                             $result = mysqli_query($link, $sql);
 
                             while ($row = mysqli_fetch_assoc($result)) {
-                                if ($row["type"] == "HOUR_24") {
+                                if ($row["type"] == "RAIN") {
                                     $mm = $row["rainMm"];
                                     $loc = $row["locatedName"];
                                     echo "<div> - $loc</div>
