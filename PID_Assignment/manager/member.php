@@ -22,7 +22,7 @@ $result->execute();
 <body>
 <nav class="navbar navbar-expand-sm bg-light navbar-light">
     <ul class="navbar-nav">
-        
+        <span class="navbar-brand" style="margin-left:70px;">MaMa購物網</span>
         <?php if(isset($_SESSION["accountManager"])) { ?>
             <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
             <li class="nav-item">
@@ -67,7 +67,7 @@ $result->execute();
                 <button type="button" class="btn btn-outline-dark" onclick="window.location='addItem.php'">新增商品</button>
                 <button type="button" class="btn btn-outline-dark" onclick="window.location='Item.php'">修改/刪除商品</button>
             </div> -->
-            <div class="col-9">
+            <div class="col-11">
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -88,7 +88,7 @@ $result->execute();
                                         <?php } else { ?>
                                             <a href="banAccount.php?id=<?= $row["accountId"] ?>&canUse=0" class="btn btn-outline-success">啟用會員</a>
                                         <?php } ?>
-                                        
+                                        <a href="order.php?id=<?= $row["accountId"] ?>" class="btn btn-outline-dark">訂單明細</a>
                                     </span>
                                 </td>
                             </tr>

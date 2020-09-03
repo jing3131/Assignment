@@ -22,18 +22,37 @@ $row = $result->fetch(PDO::FETCH_ASSOC);
 if (isset($_POST["submitbtn"])) {
     $productName = $_POST["ItemNameTF"];    // echo $productName."name"; 
     $productText = $_POST["Itemtextarea"];  // echo $productText."text";
-    $fp = fopen($_FILES['ImgFileInput']['tmp_name'], "rb");
-    $pic = addslashes(fread($fp, $_FILES['ImgFileInput']['size']));
-    fclose($fp);
-    $sql = <<<sqlCommand
-        UPDATE product SET productName = ?, productText = ?, productPic= ?
-        WHERE productId = ?
-    sqlCommand;
-    $result = $link->prepare($sql);
-    $result->execute(array("$productName", "$productText", "$pic", $id));
+    $productQty = $_POST["quantityTF"];
+    $productPrice = $_POST["priceTF"];
+    // $fp = fopen($_FILES['ImgFileInput']['tmp_name'], "rb");
+    // $pic = addslashes(fread($fp, $_FILES['ImgFileInput']['size']));
+    // fclose($fp);
+    if($_FILES['ImgFileInput']['tmp_name']==null){
+        $sql = <<<sqlCommand
+            UPDATE product SET productName = ?, productText = ?, productQuantity = ?, productPrice = ?
+            WHERE productId = ?
+        sqlCommand;
+        $result = $link->prepare($sql);
+        $result->execute(array("$productName", "$productText", $productQty, $productPrice, $id));
+    }
+    else{
+        $tmpName =$_FILES['ImgFileInput']['tmp_name'];
+        $fp = fopen($tmpName,"r");
+        $file_img = fread($fp,filesize(($tmpName)));
+        $img64 = base64_encode($file_img);        
+
+
+        $sql = <<<sqlCommand
+            UPDATE product SET productName = ?, productText = ?, productPic= ?, productQuantity = ?, productPrice = ?
+            WHERE productId = ?
+        sqlCommand;
+        $result = $link->prepare($sql);
+        $result->execute(array("$productName", "$productText", "$img64", $productQty, $productPrice, $id));
+    }
+
 
     echo "<script>alert('更新成功');</script>";
-    header("refresh:0.5;url='index.php'");
+    header("refresh:0.5;url='../index.php'");
     exit();
 }
 
@@ -56,7 +75,7 @@ if (isset($_POST["submitbtn"])) {
 
     <nav class="navbar navbar-expand-sm bg-light navbar-light">
         <ul class="navbar-nav">
-
+            <span class="navbar-brand" style="margin-left:70px;">MaMa購物網</span>
             <?php if (isset($_SESSION["accountManager"])) { ?>
                 <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
                 <li class="nav-item">
@@ -111,7 +130,7 @@ if (isset($_POST["submitbtn"])) {
             <div class="form-group row">
                 <div class="col-1"><label for="quantity">數量</label></div>
                 <div class="offset-1 col-2">
-                    <input type="number" name="quantityTF" min="0" max="100" value="<?= $row["productQuantity"] ?>" required>
+                    <input type="number" name="quantityTF" min="0" value="<?= $row["productQuantity"] ?>" required>
                 </div>
             </div>
 
@@ -120,7 +139,7 @@ if (isset($_POST["submitbtn"])) {
                 <div class="offset-1 col-2">
                     <input type="text" name="priceTF" value="<?= $row["productPrice"] ?>" required>
                 </div>
-            </div>
+            </div>            
 
             <div class="form-group row">
                 <section class="button-box">
@@ -133,6 +152,10 @@ if (isset($_POST["submitbtn"])) {
                 <figure>
                     <img id="file_thumbnail">
                 </figure>
+            </div>
+
+            <div class="form-group row">
+                <img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" width="200px" height="200px" id="productPic">
             </div>
 
             <div class="form-group row">
@@ -150,7 +173,8 @@ if (isset($_POST["submitbtn"])) {
         inputFile.addEventListener('change', function(e) {
             var fileData = e.target.files[0];
             console.log(fileData);
-            document.getElementById('file_thumbnail').src = URL.createObjectURL(fileData);
+            // document.getElementById('file_thumbnail').src = URL.createObjectURL(fileData);
+            document.getElementById('productPic').src = URL.createObjectURL(fileData);
         }, false);
     </script>
 </body>

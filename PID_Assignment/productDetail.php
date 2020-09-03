@@ -9,6 +9,9 @@ $userName;
 if (isset($_SESSION["account"])) {
     $userName = $_SESSION["account"];
 }
+else if(isset($_SESSION["accountManager"])){
+    $userName = $_SESSION["accountManager"];
+}
 
 if (!isset($_GET["id"])) {
     die("not found id");
@@ -87,7 +90,7 @@ $result->execute(array($id));
 
 <nav class="navbar navbar-expand-sm bg-light navbar-light">
     <ul class="navbar-nav">
-        
+        <span class="navbar-brand" style="margin-left:70px;">MaMa購物網</span>
         <?php if(isset($_SESSION["accountManager"])) { ?>
             <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $userName ?></span>
             <li class="nav-item">
@@ -96,18 +99,18 @@ $result->execute(array($id));
 
             <span class="navbar-text" style="margin-left:70px;">商品管理</span>
             <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="addItem.php"style="margin-left:30px;">新增商品</a>
+            <a class="nav-link btn btn-outline-dark" href="manager/addItem.php"style="margin-left:30px;">新增商品</a>
             </li>
             <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="Item.php"style="margin-left:10px;">修改/刪除商品</a>
+            <a class="nav-link btn btn-outline-dark" href="manager/Item.php"style="margin-left:10px;">修改/刪除商品</a>
             </li>
 
             <span class="navbar-text" style="margin-left:70px;">會員管理</span>
             <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="order.php"style="margin-left:30px;">訂單管理</a>
+            <a class="nav-link btn btn-outline-dark" href="manager/order.php"style="margin-left:30px;">訂單管理</a>
             </li>
             <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="member.php"style="margin-left:10px;">會員列表</a>
+            <a class="nav-link btn btn-outline-dark" href="manager/member.php"style="margin-left:10px;">會員列表</a>
             </li>
             <li class="nav-item">
             <a class="nav-link btn btn-outline-dark" href="index.php"style="margin-left:50px;">首頁</a>
@@ -163,16 +166,18 @@ $result->execute(array($id));
                         <?= $productText; ?>
                     </div>
                     <div class="row" style="margin-bottom: 30px;">
-                        <?= "價格：" . $productPrice . "$ NTD"; ?>
+                        價格：<label for="" id="price"><?= $productPrice ; ?> </label>$ NTD
                     </div>
                     <div class="row" style="margin-bottom: 30px;">
                         <?= "剩餘數量：" . $productQuantity; ?>
                     </div>
 
-                    <div class="row" style="margin-bottom: 30px;">
-                        <button name="buybtn" id="buybtn" type="button" class="btn btn-outline-success">直接購買</button> <!-- data-toggle="modal" data-target="#buyModal" -->
-                        <button name="shoppingCarbtn" id="shoppingCarbtn" type="submit" class="btn btn-outline-primary" style="margin-left:20px;">購物車</button>
-                    </div>
+                    <?php if(isset($_SESSION["account"])) { ?>
+                        <div class="row" style="margin-bottom: 30px;">
+                            <button name="buybtn" id="buybtn" type="button" class="btn btn-outline-success">直接購買</button> <!-- data-toggle="modal" data-target="#buyModal" -->
+                            <button name="shoppingCarbtn" id="shoppingCarbtn" type="button" class="btn btn-outline-primary" style="margin-left:20px;">購物車</button>
+                        </div>
+                    <?php } ?>                    
 
                 </div>
             <?php } ?>
@@ -294,7 +299,7 @@ $result->execute(array($id));
 
                 $("#payOkbtn").on("click", function() {            // 購買確認
                     if ($("#addressTF").val() == "") {
-                        alert("地址不能為空");
+                        alert("地址(店名)不能為空");
                     } else {
                         if ($("input:radio[name=pay]:checked").val() == "credit" && $("#creditTF").val() == "") {
                             alert("請輸入信用卡卡號");
@@ -304,13 +309,14 @@ $result->execute(array($id));
                                 url: "ajax.php",
                                 dataType: "json",
                                 data: {
-                                    productName: $("#productNameL").text(),
+                                    //productName: $("#productNameL").text(),
                                     productQuantity: $("#quantityTF").val(),
                                     buyOrShopping: buy,
                                     deliveryTo: $("input:radio[name=deliveryTo]:checked").val(),
                                     address: $("#addressTF").val(),
                                     pay: $("input:radio[name=pay]:checked").val(),
-                                    creditCardNum: $("#creditTF").val()
+                                    creditCardNum: $("#creditTF").val(),
+                                    productPrice: $("#price").text()
                                 }
                             });
                             alert("購買成功");

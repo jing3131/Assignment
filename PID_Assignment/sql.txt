@@ -36,7 +36,8 @@ CREATE TABLE product(
 
 CREATE TABLE shoppingCar(
     accountId int not null,
-    productName varchar(30) not null,
+    productId int not null,
+    #productName varchar(30) not null,
     quantity int not null,
     #credit varchar(50),
     #address varchar(50)
@@ -44,11 +45,12 @@ CREATE TABLE shoppingCar(
 
 CREATE TABLE orderDetail (
     accountId int not null,
-    productName varchar(30) not null,
+    productId int not null,
     quantity int not null,
     deliveryTo varchar(30) not null,
     address varchar(50) not null,
     pay varchar(30) not null,
-    creditCard varchar(30)
+    creditCard varchar(30),
+    totalAmount int not null
 );
 

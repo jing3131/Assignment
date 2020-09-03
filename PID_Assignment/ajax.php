@@ -15,45 +15,54 @@ $id = $row["accountId"];                            // accountId
 
 if($_SERVER["REQUEST_METHOD"]=="POST"){     // 如果是post請求
 
-    $name = $_POST["productName"];
+    // $name = $_POST["productName"];
     $quantity = $_POST["productQuantity"];
     $buyOrShopping = $_POST["buyOrShopping"];               // 直接購買 or 放購物車
     $credit = $_POST["credit"];                         // null 變 ""
     $address = $_POST["address"];   
+    $productPrice = $_POST["productPrice"];
 
+    $productId;
+    if(isset($_POST["productId"])){
+        $productId = $_POST["productId"];
+    }
+    else{
+        $productId = $_SESSION["productId"];
+    }
 
-    // if($row["accountId"]==null){
-    //     $sql=<<<sqlCommand
-    //         update orderDetail set accountId = ?
-    //     sqlCommand;
-    //     $result=$link->prepare($sql) ;
-    //     $result->execute(array(12555));
-    // }
+    
+
 
     if($buyOrShopping == 0){                // 放購物車
         $sql= <<<sqlCommand
-            INSERT INTO shoppingCar (accountId, productName, quantity)
+            INSERT INTO shoppingCar (accountId, quantity, productId)
             VALUES (?,?,?)
         sqlCommand;
         $result = $link->prepare($sql);
-        $result->execute(array($id,"$name",$quantity));
+        $result->execute(array($id,$quantity,$productId));
     }
     else{
         // 新增訂單
         $deliveryTo = $_POST["deliveryTo"];
         $pay = $_POST["pay"];
         $creditCardNum = $_POST["creditCardNum"];
+        $totalAmount = $productPrice * $quantity;
 
         $sql= <<<sqlCommand
-            INSERT INTO orderDetail (accountId, productName, quantity, deliveryTo, address, pay, creditCard)
-            VALUES (?,?,?,?,?,?)
+            INSERT INTO orderDetail (accountId, productId, quantity, deliveryTo, address, pay, creditCard, totalAmount)
+            VALUES (?,?,?,?,?,?,?,?)
         sqlCommand;
         $result = $link->prepare($sql);
-        $result->execute(array($id,"$name",$quantity,"$deliveryTo","$address","$pay","$creditCardNum"));
+        $result->execute(array($id,$productId,$quantity,"$deliveryTo","$address","$pay","$creditCardNum",$totalAmount));
+
+        $sql=<<<sqlCommand
+            DELETE FROM shoppingCar WHERE productId = ?
+        sqlCommand;
+        $result = $link->prepare($sql);
+        $result->execute(array($productId));
 
 
-        // 更新產品數量
-        $productId = $_SESSION["productId"];
+        // 更新產品數量        
         $sql = <<<sqlCommand
             SELECT productQuantity FROM product WHERE productId = ?
         sqlCommand;
@@ -62,11 +71,27 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){     // 如果是post請求
         $row = $result->fetch(PDO::FETCH_ASSOC);
         $qnt = $row["productQuantity"] - $quantity;             // 原有的數量 - 購買的數量
 
-        $sql = <<<sqlCommand
-            UPDATE product SET productQuantity = ? WHERE productId = ?
-        sqlCommand;
-        $result = $link->prepare($sql);
-        $result->execute(array($qnt,$productId));
+        if($qnt==0){                                        // 沒庫存就下架
+            $sql = <<<sqlCommand
+                DELETE FROM product WHERE productId = ?
+            sqlCommand;
+            $result = $link->prepare($sql);
+            $result->execute(array($productId));
+
+            $sql = <<<sqlCommand
+                DELETE FROM shoppingCar WHERE productId = ?
+            sqlCommand;
+            $result = $link->prepare($sql);
+            $result->execute(array($productId));
+        }
+        else{
+            $sql = <<<sqlCommand
+                UPDATE product SET productQuantity = ? WHERE productId = ?
+            sqlCommand;
+            $result = $link->prepare($sql);
+            $result->execute(array($qnt,$productId));
+        }
+        
 
         // 更新帳戶
         $sql = <<<sqlCommand

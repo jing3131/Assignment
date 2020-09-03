@@ -33,7 +33,7 @@ if(isset($_POST["submitbtn"])){
         fclose($fp);
 
         echo "<script>alert('新增成功！')</script>";
-        header("refresh:0.5;url='index.php'");
+        header("refresh:0.5;url='../index.php'");
         exit();
     }
 
@@ -41,7 +41,7 @@ if(isset($_POST["submitbtn"])){
     
 }
 if(isset($_POST["cancelbtn"])){
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -114,7 +114,7 @@ if(isset($_POST["cancelbtn"])){
 <body>
 <nav class="navbar navbar-expand-sm bg-light navbar-light">
     <ul class="navbar-nav">
-        
+        <span class="navbar-brand" style="margin-left:70px;">MaMa購物網</span>
         <?php if(isset($_SESSION["accountManager"])) { ?>
             <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
             <li class="nav-item">
@@ -171,7 +171,7 @@ if(isset($_POST["cancelbtn"])){
         <div class="form-group row">
             <div class="col-1"><label for="quantity">數量</label></div>
             <div class="offset-1 col-2">
-                <input type="number" name="quantityTF" min="0" max="100" value="0" required>
+                <input type="number" name="quantityTF" min="0" value="0" required>
             </div>
         </div>
 
@@ -180,7 +180,7 @@ if(isset($_POST["cancelbtn"])){
             <div class="offset-1 col-2">
                 <input type="text" name="priceTF" value="0" required>
             </div>
-        </div>
+        </div>        
 
         <div class="form-group row">
             <section class="button-box">
@@ -193,6 +193,10 @@ if(isset($_POST["cancelbtn"])){
             <figure>
                 <img id="file_thumbnail">
             </figure>
+        </div>
+
+        <div class="form-group row">
+            <img src="" id="productPic" width="200px" height="200px">
         </div>
        
         <div class="form-group row">
@@ -232,7 +236,8 @@ if(isset($_POST["cancelbtn"])){
 
         var fileData = e.target.files[0]; // 檔案資訊   一個Blob物件的陣列，裡面可以取得使用者所有想要上傳的檔案
         console.log(fileData); // 用開發人員工具可看到資料
-        document.getElementById('file_thumbnail').src = URL.createObjectURL(fileData);  // 將圖片產生出一個URL ->(縮圖)
+        // document.getElementById('file_thumbnail').src = URL.createObjectURL(fileData);  // 將圖片產生出一個URL ->(縮圖)
+        document.getElementById('productPic').src = URL.createObjectURL(fileData);  // 將圖片產生出一個URL ->(縮圖)
 
       }, false);
 

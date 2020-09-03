@@ -18,6 +18,12 @@ sqlCommand;
 $result = $link->prepare($sql);
 $result->execute(array($id));
 
+$sql = <<<sqlCommand
+    DELETE FROM shoppingCar WHERE productId = ?
+sqlCommand;
+$result = $link->prepare($sql);
+$result->execute(array($id));
+
 echo "<script>alert('刪除成功')</script>";
 header("refresh:0.5;url='item.php'");
 exit();

@@ -23,7 +23,7 @@ $result->execute(array($id));
 <body>
 <nav class="navbar navbar-expand-sm bg-light navbar-light">
     <ul class="navbar-nav">
-        
+        <span class="navbar-brand" style="margin-left:70px;">MaMa購物網</span>
         <?php if(isset($_SESSION["accountManager"])) { ?>
             <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
             <li class="nav-item">
