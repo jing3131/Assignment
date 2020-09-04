@@ -8,8 +8,7 @@ $userName;
 
 if (isset($_SESSION["account"])) {
     $userName = $_SESSION["account"];
-}
-else if(isset($_SESSION["accountManager"])){
+} else if (isset($_SESSION["accountManager"])) {
     $userName = $_SESSION["accountManager"];
 }
 
@@ -88,61 +87,70 @@ $result->execute(array($id));
 
 <body>
 
-<nav class="navbar navbar-expand-sm bg-light navbar-light">
-    <ul class="navbar-nav">
-        <span class="navbar-brand" style="margin-left:70px;">MaMa購物網</span>
-        <?php if(isset($_SESSION["accountManager"])) { ?>
-            <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $userName ?></span>
-            <li class="nav-item">
-                <a class="nav-link" href="manager/login.php?logout=1"> 登出 </a>
-            </li>
+    <nav class="navbar navbar-expand-xl bg-light navbar-light">
 
-            <span class="navbar-text" style="margin-left:70px;">商品管理</span>
-            <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="manager/addItem.php"style="margin-left:30px;">新增商品</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="manager/Item.php"style="margin-left:10px;">修改/刪除商品</a>
-            </li>
+        <a class="navbar-brand" style="margin-left:70px;" href="index.php">MaMa購物網</a>
 
-            <span class="navbar-text" style="margin-left:70px;">會員管理</span>
-            <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="manager/order.php"style="margin-left:30px;">訂單管理</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="manager/member.php"style="margin-left:10px;">會員列表</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="index.php"style="margin-left:50px;">首頁</a>
-            </li>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
 
-        <?php } else if(isset($_SESSION["account"])){ ?>
-            <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $userName ?></span>
-            <li class="nav-item">
-                <a class="nav-link" href="client/login.php?logout=1"> 登出 </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-outline-dark" href="client/shoppingCar.php" style="margin-left:50px;"> 購物車 </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link btn btn-outline-dark" href="client/history.php" style="margin-left:50px;"> 購買歷史 </a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="index.php"style="margin-left:500px;">首頁</a>
-            </li>
-        <?php } else{ ?>
-            <span class="navbar-text" style="margin-left:30px;">(管理請先登入)</span>
-            <li class="nav-item">
-                <a class="nav-link" href="manager/login.php"> 管理登入 </a>
-            </li>
-            <span class="navbar-text" style="margin-left:60px;">(一般會員登入)</span>
-            <li class="nav-item">
-                <a class="nav-link" href="client/login.php"> 會員登入 </a>
-            </li>
-        <?php } ?>
-        
-    </ul>
-</nav>
+                <?php if (isset($_SESSION["accountManager"])) { ?>
+                    <span class="navbar-text" style="margin-left:50px;">歡迎登入： <?= $userName ?></span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manager/login.php?logout=1" style="margin-left:50px;"> 登出 </a>
+                    </li>
+
+                    <span class="navbar-text" style="margin-left:70px;">商品管理</span>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="manager/addItem.php" style="margin-left:10px;">新增商品</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="manager/Item.php" style="margin-left:10px;">修改/刪除商品</a>
+                    </li>
+
+                    <span class="navbar-text" style="margin-left:70px;">會員管理</span>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="manager/order.php" style="margin-left:10px;">訂單管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="manager/member.php" style="margin-left:10px;">會員列表</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="index.php" style="margin-left:50px;">首頁</a>
+                    </li> -->
+
+                <?php } else if (isset($_SESSION["account"])) { ?>
+                    <span class="navbar-text" style="margin-left:50px;">歡迎登入： <?= $userName ?></span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="client/login.php?logout=1" style="margin-left:50px;"> 登出 </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="client/shoppingCar.php" style="margin-left:50px;"> 購物車 </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="client/history.php" style="margin-left:50px;"> 購買歷史 </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="index.php" style="margin-left:50px;">首頁</a>
+                    </li> -->
+                <?php } else { ?>
+                    <span class="navbar-text" style="margin-left:30px;">(管理請先登入)</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manager/login.php"> 管理登入 </a>
+                    </li>
+                    <span class="navbar-text" style="margin-left:60px;">(一般會員登入)</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="client/login.php"> 會員登入 </a>
+                    </li>
+                <?php } ?>
+
+            </ul>
+        </div>
+
+    </nav>
 
     <div class="container">
         <br><br>
@@ -166,18 +174,18 @@ $result->execute(array($id));
                         <?= $productText; ?>
                     </div>
                     <div class="row" style="margin-bottom: 30px;">
-                        價格：<label for="" id="price"><?= $productPrice ; ?> </label>$ NTD
+                        價格：<label for="" id="price"><?= $productPrice; ?> </label>$ NTD
                     </div>
                     <div class="row" style="margin-bottom: 30px;">
                         <?= "剩餘數量：" . $productQuantity; ?>
                     </div>
 
-                    <?php if(isset($_SESSION["account"])) { ?>
+                    <?php if (isset($_SESSION["account"])) { ?>
                         <div class="row" style="margin-bottom: 30px;">
                             <button name="buybtn" id="buybtn" type="button" class="btn btn-outline-success">直接購買</button> <!-- data-toggle="modal" data-target="#buyModal" -->
                             <button name="shoppingCarbtn" id="shoppingCarbtn" type="button" class="btn btn-outline-primary" style="margin-left:20px;">購物車</button>
                         </div>
-                    <?php } ?>                    
+                    <?php } ?>
 
                 </div>
             <?php } ?>
@@ -246,7 +254,7 @@ $result->execute(array($id));
 
                             <!-- Modal footer -->
                             <div class="modal-footer">
-                                <button type="button" id="payOkbtn" class="btn btn-outline-danger">確認</button>
+                                <button type="submit" id="payOkbtn" class="btn btn-outline-danger" onclick="window.location='index.php'">確認</button>
                             </div>
 
                         </div>
@@ -290,14 +298,14 @@ $result->execute(array($id));
                         }
                     });
                     $("#buyModal").modal("hide");
-                } else {                                     // 直接購買
+                } else { // 直接購買
                     // 再彈一個視窗
                     $("#transactionModal").modal({
                         backdrop: "static"
                     });
                 }
 
-                $("#payOkbtn").on("click", function() {            // 購買確認
+                $("#payOkbtn").on("click", function() { // 購買確認
                     if ($("#addressTF").val() == "") {
                         alert("地址(店名)不能為空");
                     } else {

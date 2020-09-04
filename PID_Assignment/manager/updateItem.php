@@ -27,19 +27,18 @@ if (isset($_POST["submitbtn"])) {
     // $fp = fopen($_FILES['ImgFileInput']['tmp_name'], "rb");
     // $pic = addslashes(fread($fp, $_FILES['ImgFileInput']['size']));
     // fclose($fp);
-    if($_FILES['ImgFileInput']['tmp_name']==null){
+    if ($_FILES['ImgFileInput']['tmp_name'] == null) {
         $sql = <<<sqlCommand
             UPDATE product SET productName = ?, productText = ?, productQuantity = ?, productPrice = ?
             WHERE productId = ?
         sqlCommand;
         $result = $link->prepare($sql);
         $result->execute(array("$productName", "$productText", $productQty, $productPrice, $id));
-    }
-    else{
-        $tmpName =$_FILES['ImgFileInput']['tmp_name'];
-        $fp = fopen($tmpName,"r");
-        $file_img = fread($fp,filesize(($tmpName)));
-        $img64 = base64_encode($file_img);        
+    } else {
+        $tmpName = $_FILES['ImgFileInput']['tmp_name'];
+        $fp = fopen($tmpName, "r");
+        $file_img = fread($fp, filesize(($tmpName)));
+        $img64 = base64_encode($file_img);
 
 
         $sql = <<<sqlCommand
@@ -67,48 +66,61 @@ if (isset($_POST["submitbtn"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="../bootstrap-4.5.2-dist/css/bootstrap.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
 <body>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <nav class="navbar navbar-expand-sm bg-light navbar-light">
-        <ul class="navbar-nav">
-            <span class="navbar-brand" style="margin-left:70px;">MaMa購物網</span>
-            <?php if (isset($_SESSION["accountManager"])) { ?>
-                <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
-                <li class="nav-item">
-                    <a class="nav-link" href="login.php?logout=1"> 登出 </a>
-                </li>
+    <nav class="navbar navbar-expand-xl bg-light navbar-light">
 
-                <span class="navbar-text" style="margin-left:70px;">商品管理</span>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-dark" href="addItem.php" style="margin-left:30px;">新增商品</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-dark" href="Item.php" style="margin-left:10px;">修改/刪除商品</a>
-                </li>
+        <a class="navbar-brand" style="margin-left:70px;" href="../index.php">MaMa購物網</a>
 
-                <span class="navbar-text" style="margin-left:70px;">會員管理</span>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-dark" href="order.php" style="margin-left:30px;">訂單管理</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-dark" href="member.php" style="margin-left:10px;">會員列表</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-dark" href="../index.php" style="margin-left:50px;">首頁</a>
-                </li>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <?php } else { ?>
-                <span class="navbar-text">請先登入</span>
-                <li class="nav-item">
-                    <a class="nav-link" href="login.php"> 登入 </a>
-                </li>
-            <?php } ?>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
 
-        </ul>
+                <?php if (isset($_SESSION["accountManager"])) { ?>
+                    <span class="navbar-text" style="margin-left:50px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php?logout=1" style="margin-left:50px;"> 登出 </a>
+                    </li>
+
+                    <span class="navbar-text" style="margin-left:70px;">商品管理</span>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="addItem.php" style="margin-left:10px;">新增商品</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="Item.php" style="margin-left:10px;">修改/刪除商品</a>
+                    </li>
+
+                    <span class="navbar-text" style="margin-left:70px;">會員管理</span>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="order.php" style="margin-left:10px;">訂單管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="member.php" style="margin-left:10px;">會員列表</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="../index.php" style="margin-left:10px;">首頁</a>
+                    </li> -->
+
+                <?php } else { ?>
+                    <span class="navbar-text">請先登入</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php"> 登入 </a>
+                    </li>
+                <?php } ?>
+
+            </ul>
+        </div>
+
     </nav>
 
     <div class="container"> <br>
@@ -139,7 +151,7 @@ if (isset($_POST["submitbtn"])) {
                 <div class="offset-1 col-2">
                     <input type="text" name="priceTF" value="<?= $row["productPrice"] ?>" required>
                 </div>
-            </div>            
+            </div>
 
             <div class="form-group row">
                 <section class="button-box">

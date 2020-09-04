@@ -15,11 +15,11 @@ $locatedName;   // 縣市底下的地理位置
 $itemId =1;
 
 try{
-    foreach($record as $val){            
-        require("dataUpdate.php");                
-    }    
+    // foreach($record as $val){            
+    //     require("dataUpdate.php");                
+    // }    
     foreach($recordWeek as $val){
-        require("dataUpdate.php");
+        require("dataInsert.php");
     }
     foreach($recordRain as $val){
         // $dataTime = $val["time"]["obsTime"]; //echo $dataTime;             // Insert Into

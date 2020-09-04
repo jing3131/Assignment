@@ -32,7 +32,7 @@ if (isset($_GET["oneDaysbtn"])) {
 
     //require("sqlWeather.php");
     $sql = <<<sqlCommand
-    SELECT l.locationName, wdn.startTime, wdn.endTime, wdn.value FROM location as l
+        SELECT l.locationName, wdn.startTime, wdn.endTime, wdn.value FROM location as l
         JOIN WeatherDescription AS wdn ON l.locationId = wdn.locationId
         WHERE l.locationId = $locationId
         ORDER BY endTime DESC

@@ -41,6 +41,14 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){     // 如果是post請求
         $result = $link->prepare($sql);
         $result->execute(array($id,$quantity,$productId));
     }
+    else if($buyOrShopping == 2){            // 刪除購物車
+        $shoppingCarId = $_POST["shoppingCarId"];
+        $sql =  <<<sqlCommand
+            DELETE FROM shoppingCar WHERE shoppingCarId = ?
+        sqlCommand;
+        $result = $link->prepare($sql);
+        $result->execute(array($shoppingCarId));
+    }
     else{
         // 新增訂單
         $deliveryTo = $_POST["deliveryTo"];

@@ -33,9 +33,9 @@ foreach($val["weatherElement"] as $element){
                 UPDATE $elementName SET startTime = '$startTime', endTime = '$endTime', `value` = '$values'
                 WHERE id = $itemId AND locationId = $id
             sqlCommand;
-            //echo $sql ."<br>";
+            echo $sql ."<br>";
             $itemId ++;
-            mysqli_query($link,$sql);
+            //mysqli_query($link,$sql);
         }        
         
     }

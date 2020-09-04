@@ -35,15 +35,17 @@ CREATE TABLE product(
 );
 
 CREATE TABLE shoppingCar(
+    shoppingCarId int AUTO_INCREMENT PRIMARY KEY,
     accountId int not null,
     productId int not null,
     #productName varchar(30) not null,
-    quantity int not null,
+    quantity int not null
     #credit varchar(50),
     #address varchar(50)
 );
 
 CREATE TABLE orderDetail (
+    orderId int AUTO_INCREMENT PRIMARY KEY,
     accountId int not null,
     productId int not null,
     quantity int not null,

@@ -6,7 +6,7 @@ $pdtId = [];
 
 require("../config.php");
 $sql = <<<sqlCommand
-    SELECT sc.quantity, p.productName, p.productPic, p.productPrice, p.productId, p.productQuantity
+    SELECT sc.quantity, p.productName, p.productPic, p.productPrice, p.productId, p.productQuantity, sc.shoppingCarId
     FROM shoppingCar AS sc
     JOIN product as p ON p.productId = sc.productId
     WHERE accountId = ?
@@ -23,6 +23,9 @@ $result->execute(array($id));
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="../bootstrap-4.5.2-dist/css/bootstrap.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="../jquery.js"></script>
     <style>
         input[type=number] {
@@ -55,36 +58,46 @@ $result->execute(array($id));
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-sm bg-light navbar-light">
-        <ul class="navbar-nav">
+    <nav class="navbar navbar-expand-xl bg-light navbar-light">
 
-            <span class="navbar-brand" style="margin-left:70px;">MaMa購物網</span>
-            <?php if (isset($_SESSION["account"])) { ?>
-                <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $userName ?></span>
-                <li class="nav-item">
-                    <a class="nav-link" href="login.php?logout=1"> 登出 </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-dark" href="shoppingCar.php" style="margin-left:50px;"> 購物車 </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-dark" href="history.php" style="margin-left:50px;"> 購買歷史 </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link btn btn-outline-dark" href="../index.php" style="margin-left:500px;">首頁</a>
-                </li>
-            <?php } else { ?>
-                <span class="navbar-text" style="margin-left:30px;">(管理請先登入)</span>
-                <li class="nav-item">
-                    <a class="nav-link" href="manager/login.php"> 管理登入 </a>
-                </li>
-                <span class="navbar-text" style="margin-left:60px;">(一般會員登入)</span>
-                <li class="nav-item">
-                    <a class="nav-link" href="client/login.php"> 會員登入 </a>
-                </li>
-            <?php } ?>
+        <a class="navbar-brand" style="margin-left:70px;" href="../index.php">MaMa購物網</a>
 
-        </ul>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+
+
+                <?php if (isset($_SESSION["account"])) { ?>
+                    <span class="navbar-text" style="margin-left:50px;">歡迎登入： <?= $userName ?></span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php?logout=1" style="margin-left:50px;"> 登出 </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="shoppingCar.php" style="margin-left:50px;"> 購物車 </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="history.php" style="margin-left:50px;"> 購買歷史 </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="../index.php" style="margin-left:500px;">首頁</a>
+                    </li> -->
+                <?php } else { ?>
+                    <span class="navbar-text" style="margin-left:30px;">(管理請先登入)</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="manager/login.php"> 管理登入 </a>
+                    </li>
+                    <span class="navbar-text" style="margin-left:60px;">(一般會員登入)</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="client/login.php"> 會員登入 </a>
+                    </li>
+                <?php } ?>
+
+            </ul>
+        </div>
+
     </nav>
     <div class="container">
         <br><br>
@@ -110,6 +123,10 @@ $result->execute(array($id));
                     <td Rowspan="3" Align="Center" width="150px"><input type="checkbox" name="ckbx" value="<?= $row["productId"] ?>"></td>
                     <td Rowspan="3" Align="Center" width="150px"><img src="data:image/jpeg;base64,<?= $row["productPic"] ?>" style="width:150px; height:150px" alt=""></td>
                     <td>產品名稱：<label for="" id="productNameL"><?= $row["productName"] ?></label></td>
+                    <!-- <td Rowspan="3" Align="Center" width="150px">
+                        <button type="button" name="deletebtn" id="deletebtn<?= $row["productId"] ?>" class="btn btn-outline-danger">Ｘ</button>
+                    </td> -->
+                    <input type="hidden" name="shoppingCarId<?= $row["shoppingCarId"] ?>" id="shoppingCarId<?= $row["productId"] ?>" value="<?= $row["shoppingCarId"] ?>">
                 <tr>
                     <td><label for="">數量</label>
                         <input type="number" name="quantityTF" min="0" max="<?= $row["productQuantity"] ?>" id="qty<?= $row["productId"] ?>" value="<?= $row["quantity"] ?>">
@@ -140,8 +157,10 @@ $result->execute(array($id));
             </tr>
         </table>
         <!-- </div> -->
+        <br>
         <form action="" method="post">
-            <button type="submit" id="okbtn" name="okbtn" style="float:right" class="btn btn-outline-success">確認送出</button>
+            <button type="submit" id="deletebtn" name="deletebtn" style="margin-left:800px" class="btn btn-outline-danger">刪除購物車</button>    <!--style="float:right"-->
+            <button type="submit" id="okbtn" name="okbtn"  class="btn btn-outline-success">確認送出</button>
         </form>
 
 
@@ -175,21 +194,48 @@ $result->execute(array($id));
                                 dataType: "json",
                                 data: {
                                     productId: pdtId,
-                                    productQuantity: $("#qty"+pdtId).val(),                     // "#"+變數 可串接成變動id
+                                    productQuantity: $("#qty" + pdtId).val(), // "#"+變數 可串接成變動id
                                     buyOrShopping: 1,
                                     deliveryTo: $("input:radio[name=deliveryTo]:checked").val(),
                                     address: $("#addressTF").val(),
                                     pay: $("input:radio[name=pay]:checked").val(),
                                     creditCardNum: $("#creditTF").val(),
-                                    productPrice: $("#productPrice"+pdtId).text()
+                                    productPrice: $("#productPrice" + pdtId).text()
                                 }
-                            });
-                            alert("購買成功"); 
+                            });                            
                         }
                     }
+                    alert("購買成功");
                 }
             }
-        })
+        });
+
+        $("#deletebtn").on("click", function() {
+            if ($("input:checkbox[name=ckbx]:checked").length == 0) { // 如果checkedbox被勾選的項目數 = 0
+                alert("請勾選項目");
+            } else {
+                var ckLan = $("input:checkbox[name=ckbx]").length;
+                var ckbxId = document.getElementsByName("ckbx");
+                var pdtId;
+                for (let i = 0; i < ckLan; i++) {
+                    if (ckbxId[i].checked) {
+                        pdtId = ckbxId[i].value;
+                        // alert(pdtId);
+                        //alert($("#shoppingCarId"+pdtId).val());
+                        $.ajax({
+                            type: "post",
+                            url: '../ajax.php',
+                            dataType: "json",
+                            data: {
+                                shoppingCarId: $("#shoppingCarId"+pdtId).val(),
+                                buyOrShopping: 2
+                            }
+                        })
+                    }
+                }
+                alert("購物車已刪除");
+            }
+        });
     </script>
 </body>
 

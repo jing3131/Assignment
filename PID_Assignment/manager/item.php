@@ -18,46 +18,59 @@ $result->execute(array($id));
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="../bootstrap-4.5.2-dist/css/bootstrap.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-<nav class="navbar navbar-expand-sm bg-light navbar-light">
-    <ul class="navbar-nav">
-        <span class="navbar-brand" style="margin-left:70px;">MaMa購物網</span>
-        <?php if(isset($_SESSION["accountManager"])) { ?>
-            <span class="navbar-text" style="margin-left:70px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
-            <li class="nav-item">
-                <a class="nav-link" href="login.php?logout=1"> 登出 </a>
-            </li>
+    <nav class="navbar navbar-expand-xl bg-light navbar-light">
 
-            <span class="navbar-text" style="margin-left:70px;">商品管理</span>
-            <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="addItem.php"style="margin-left:30px;">新增商品</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="Item.php"style="margin-left:10px;">修改/刪除商品</a>
-            </li>
+        <a class="navbar-brand" style="margin-left:70px;" href="../index.php">MaMa購物網</a>
 
-            <span class="navbar-text" style="margin-left:70px;">會員管理</span>
-            <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="order.php"style="margin-left:30px;">訂單管理</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="member.php"style="margin-left:10px;">會員列表</a>
-            </li>
-            <li class="nav-item">
-            <a class="nav-link btn btn-outline-dark" href="../index.php"style="margin-left:50px;">首頁</a>
-            </li>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-        <?php } else{ ?>
-            <span class="navbar-text" >請先登入</span>
-            <li class="nav-item">
-                <a class="nav-link" href="login.php"> 登入 </a>
-            </li>
-        <?php } ?>
-        
-    </ul>
-</nav>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+
+                <?php if (isset($_SESSION["accountManager"])) { ?>
+                    <span class="navbar-text" style="margin-left:50px;">歡迎登入： <?= $_SESSION["accountManager"] ?></span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php?logout=1" style="margin-left:50px;"> 登出 </a>
+                    </li>
+
+                    <span class="navbar-text" style="margin-left:70px;">商品管理</span>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="addItem.php" style="margin-left:10px;">新增商品</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="Item.php" style="margin-left:10px;">修改/刪除商品</a>
+                    </li>
+
+                    <span class="navbar-text" style="margin-left:70px;">會員管理</span>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="order.php" style="margin-left:10px;">訂單管理</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="member.php" style="margin-left:10px;">會員列表</a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link btn btn-outline-dark" href="../index.php" style="margin-left:10px;">首頁</a>
+                    </li> -->
+
+                <?php } else { ?>
+                    <span class="navbar-text">請先登入</span>
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.php"> 登入 </a>
+                    </li>
+                <?php } ?>
+
+            </ul>
+        </div>
+
+    </nav>
     <div class="container">
         <br>
         <div class="row">
@@ -69,9 +82,9 @@ $result->execute(array($id));
                 <button type="button" class="btn btn-outline-dark" onclick="window.location='addItem.php'">新增商品</button>
             </div> -->
             <br>
-            <div class="col-10">
+            <div class="col-11">
                 <table class="table table-hover">
-                    <thead>
+                    <thead class="table-active">
                         <tr>
                             <th>產品名稱</th>
                             <th>產品描述</th>
