@@ -18,20 +18,17 @@ else{
     }
 
     require("../config.php");
+    require("../getAccountSql.php");
     $canUse = $_GET["canUse"];
+    $type;
     if($canUse == 1){
-        $sql = <<<sqlCommand
-            UPDATE account SET canUse = 'N' WHERE accountId = ?
-        sqlCommand;
+        $type = "N";
     }
     else{
-        $sql = <<<sqlCommand
-            UPDATE account SET canUse = 'Y' WHERE accountId = ?
-        sqlCommand;
+        $type = "Y";
     }
     
-    $result = $link->prepare($sql);
-    $result->execute(array($id));
+    banAccount($link, $type, $id);                                // 停用/啟用會員
 
     echo "<script>alert('修改成功')</script>";
     header("refresh:0.5;url='member.php'");

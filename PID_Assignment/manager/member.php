@@ -1,11 +1,9 @@
 <?php
 session_start();
 require("../config.php");
-$sql = <<<sqlCommand
-    SELECT * FROM account
-sqlCommand;
-$result = $link->prepare($sql);
-$result->execute();
+require("../getAccountSql.php");
+
+$result = getAllAccount($link);
 
 ?>
 

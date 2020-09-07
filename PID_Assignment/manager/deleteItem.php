@@ -11,18 +11,11 @@ if(!is_numeric($id)){
 
 
 require("../config.php");
-$sql = <<<sqlCommand
-    DELETE FROM product WHERE productId = ?
-sqlCommand;
+require("../getDeleteSql.php");
 
-$result = $link->prepare($sql);
-$result->execute(array($id));
+deleteProduct($link, $id);
 
-$sql = <<<sqlCommand
-    DELETE FROM shoppingCar WHERE productId = ?
-sqlCommand;
-$result = $link->prepare($sql);
-$result->execute(array($id));
+deleteShoppingInProduct($link, $id);
 
 echo "<script>alert('刪除成功')</script>";
 header("refresh:0.5;url='item.php'");

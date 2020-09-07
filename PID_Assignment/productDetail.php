@@ -22,21 +22,10 @@ if (!is_numeric($id)) {
     die("id si not a number");
 }
 
-$sql = <<<sqlCommand
-    select * from product
-    where productId = ?;
-sqlCommand;
-
 require("config.php");
-$result = $link->prepare($sql);
-$result->execute(array($id));
+require("getSql.php");
+$result = getProductInId($link, $id);             // 商品細項
 
-// if (isset($_POST["buybtn"])) {
-//     // 彈出對話盒購買數量(bootstrap)
-// }
-// if (isset($_POST["shoppingCarbtn"])) {
-//     // 彈出對話盒購買數量(bootstrap)
-// }
 
 
 ?>
@@ -199,15 +188,18 @@ $result->execute(array($id));
                         <!-- Modal Header -->
                         <div class="modal-header">
                             <h4 class="modal-title">購買/購物車</h4>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <button type="button" class="close" id="closeBuybtn">&times;</button>
                         </div>
 
                         <!-- Modal Body -->
-                        <div class="modal-body">
-                            產品名稱： <label for="" id="productNameL"><?= $productName; ?></label> <br>
-                            數量： <input type="number" name="quantityTF" id="quantityTF" min="0" max="<?= $productQuantity ?>" value="1" required> <br>
-                            <!-- 價格： <?= $productPrice; ?> -->
-                        </div>
+                        <form action="" id="buyForm">
+                            <div class="modal-body">
+                                產品名稱： <label for="" id="productNameL"><?= $productName; ?></label> <br>
+                                數量： <input type="number" name="quantityTF" id="quantityTF" min="1" oninput="if(value<0)value=0; if(value><?= $row['productQuantity'] ?>) value=<?= $row['productQuantity'] ?>" value="0" required> <br>
+                                <!-- 價格： <?= $productPrice; ?> -->
+                            </div>
+                        </form>
+
 
                         <!-- Modal Footer -->
                         <div class="modal-footer">
@@ -220,47 +212,47 @@ $result->execute(array($id));
             <!--購買/購物車對話盒結束-->
 
             <!-- 交易對話盒 -->
-            <form action="" class="needs-validation">
-                <div class="modal" id="transactionModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
+            <!-- <form action="" class="needs-validation"> -->
+            <div class="modal" id="transactionModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
 
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h4 class="modal-title">地址與付款方式</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-
-                            <!-- Modal body -->
-                            <div class="modal-body">
-                                <label for="">地址：</label>
-
-                                <label for="address">7-11</label>
-                                <input type="radio" name="deliveryTo" id="address711" value="7-11" checked>
-                                <label for="address">全家</label>
-                                <input type="radio" name="deliveryTo" id="addressFM" value="family">
-                                <label for="address">住家</label>
-                                <input type="radio" name="deliveryTo" id="addressHome" value="home">
-                                <input type="text" name="addressTF" id="addressTF" required>
-                                <br>
-
-                                <label for="">付款方式：</label>
-                                <label for="pay">貨到付款</label>
-                                <input type="radio" name="pay" id="payCash" value="cash">
-                                <label for="pay">信用卡</label>
-                                <input type="radio" name="pay" id="payCrdt" value="credit" checked>
-                                <input type="text" name="creditTF" id="creditTF" required>
-                            </div>
-
-                            <!-- Modal footer -->
-                            <div class="modal-footer">
-                                <button type="submit" id="payOkbtn" class="btn btn-outline-danger" onclick="window.location='index.php'">確認</button>
-                            </div>
-
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">地址與付款方式</h4>
+                            <button type="button" class="close" id="closeBuybtn" data-dismiss="modal">&times;</button>
                         </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <label for="">地址：</label>
+
+                            <label for="address">7-11</label>
+                            <input type="radio" name="deliveryTo" id="address711" value="7-11" checked>
+                            <label for="address">全家</label>
+                            <input type="radio" name="deliveryTo" id="addressFM" value="family">
+                            <label for="address">住家</label>
+                            <input type="radio" name="deliveryTo" id="addressHome" value="home">
+                            <input type="text" name="addressTF" id="addressTF" required>
+                            <br>
+
+                            <label for="">付款方式：</label>
+                            <label for="pay">貨到付款</label>
+                            <input type="radio" name="pay" id="payCash" value="cash">
+                            <label for="pay">信用卡</label>
+                            <input type="radio" name="pay" id="payCrdt" value="credit" checked>
+                            <input type="text" name="creditTF" id="creditTF" required>
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="submit" id="payOkbtn" class="btn btn-outline-danger">確認</button>
+                        </div>
+
                     </div>
                 </div>
-            </form>
+            </div>
+            <!-- </form> -->
             <!--交易對話盒結束-->
 
         </div>
@@ -269,21 +261,32 @@ $result->execute(array($id));
     <script>
         var buy;
         $(function() {
-            $('#buybtn').on("click", function() { // productDetail路徑要改
-                // 彈出對話盒
+            $('#buybtn').on("click", function() {
+                // 彈出對話盒                
                 buy = 1; // buy = 1 表示直接購買
-                $("#buyModal").modal();
+                $("#buyModal").modal({
+                    backdrop: "static"
+                });
             });
 
             $('#shoppingCarbtn').on("click", function() {
                 buy = 0; // buy = 0 表示放購物車
                 // 彈出對話盒
-                $("#buyModal").modal();
+                $("#buyModal").modal({
+                    backdrop: "static"
+                });
             });
 
             $("#okbtn").on("click", function() {
-                // alert($("#quantityTF").val());
-                if (buy == 0) {
+                // if (parseFloat($("#quantityTF").val()).toString() == "NaN") {
+                //     alert("請輸入正整數");
+                // } 
+                if($("#quantityTF").val()<=0){
+                    alert("至少填入1");
+                }
+                else if (!$.isNumeric($("#quantityTF").val())) {
+                    alert("請輸入正整數");
+                } else if (buy == 0) {
                     alert("已加入購物車");
                     $.ajax({
                         type: "post",
@@ -293,8 +296,6 @@ $result->execute(array($id));
                             productName: $("#productNameL").text(),
                             productQuantity: $("#quantityTF").val(),
                             buyOrShopping: buy,
-                            // credit: null,
-                            // address: null
                         }
                     });
                     $("#buyModal").modal("hide");
@@ -304,36 +305,43 @@ $result->execute(array($id));
                         backdrop: "static"
                     });
                 }
-
-                $("#payOkbtn").on("click", function() { // 購買確認
-                    if ($("#addressTF").val() == "") {
-                        alert("地址(店名)不能為空");
+            });
+            $("#payOkbtn").on("click", function() { // 購買確認
+                if ($("#addressTF").val() == "") {
+                    alert("地址(店名)不能為空");
+                } else {
+                    if ($("input:radio[name=pay]:checked").val() == "credit" && $("#creditTF").val() == "") {
+                        alert("請輸入信用卡卡號");
                     } else {
-                        if ($("input:radio[name=pay]:checked").val() == "credit" && $("#creditTF").val() == "") {
-                            alert("請輸入信用卡卡號");
-                        } else {
-                            $.ajax({
-                                type: "post",
-                                url: "ajax.php",
-                                dataType: "json",
-                                data: {
-                                    //productName: $("#productNameL").text(),
-                                    productQuantity: $("#quantityTF").val(),
-                                    buyOrShopping: buy,
-                                    deliveryTo: $("input:radio[name=deliveryTo]:checked").val(),
-                                    address: $("#addressTF").val(),
-                                    pay: $("input:radio[name=pay]:checked").val(),
-                                    creditCardNum: $("#creditTF").val(),
-                                    productPrice: $("#price").text()
-                                }
-                            });
-                            alert("購買成功");
-                            $("#transactionModal").modal("hide");
-                        }
+                        $.ajax({
+                            type: "post",
+                            url: "ajax.php",
+                            dataType: "json",
+                            data: {
+                                //productName: $("#productNameL").text(),
+                                productQuantity: $("#quantityTF").val(),
+                                buyOrShopping: buy,
+                                deliveryTo: $("input:radio[name=deliveryTo]:checked").val(),
+                                address: $("#addressTF").val(),
+                                pay: $("input:radio[name=pay]:checked").val(),
+                                creditCardNum: $("#creditTF").val(),
+                                productPrice: $("#price").text(),
+                                $shoppingCarId: null
+                            }
+                        });
+                        alert("購買成功");
+                        $("#transactionModal").modal("hide");
+                        //window.location.href="index.php";
                     }
+                }
 
-                });
+            });
 
+
+
+            $("#closeBuybtn").on("click", function() {
+                $("#buyForm")[0].reset();
+                $("#buyModal").modal("hide");
 
             });
         });

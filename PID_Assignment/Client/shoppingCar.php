@@ -5,14 +5,8 @@ $id = $_SESSION["accountId"];
 $pdtId = [];
 
 require("../config.php");
-$sql = <<<sqlCommand
-    SELECT sc.quantity, p.productName, p.productPic, p.productPrice, p.productId, p.productQuantity, sc.shoppingCarId
-    FROM shoppingCar AS sc
-    JOIN product as p ON p.productId = sc.productId
-    WHERE accountId = ?
-sqlCommand;
-$result = $link->prepare($sql);
-$result->execute(array($id));
+require("../getSql.php");
+$result = getShoppingCarInId($link, $id);
 
 ?>
 <!DOCTYPE html>
@@ -200,7 +194,8 @@ $result->execute(array($id));
                                     address: $("#addressTF").val(),
                                     pay: $("input:radio[name=pay]:checked").val(),
                                     creditCardNum: $("#creditTF").val(),
-                                    productPrice: $("#productPrice" + pdtId).text()
+                                    productPrice: $("#productPrice" + pdtId).text(),
+                                    shoppingCarId: $("#shoppingCarId"+pdtId).val()
                                 }
                             });                            
                         }

@@ -2,31 +2,16 @@
 
 session_start();
 require("../config.php");
+require("../getSql.php");
 $idManager = $_SESSION["accountIdManager"];
 
 
 
 if (isset($_GET["id"])) {
     $id = $_GET["id"];
-    $sql = <<<sqlCommand
-        SELECT p.productName, quantity, deliveryTo, od.address, pay, od.creditCard, a.account, od.totalAmount FROM product as p
-        JOIN orderDetail as od ON p.productId = od.productId
-        JOIN account as a ON a.accountId = od.accountId
-        WHERE managerId = ? AND od.accountId = ?
-        ORDER BY od.accountId
-    sqlCommand;
-    $result = $link->prepare($sql);
-    $result->execute(array($idManager, $id));
+    $result = getOrderInId($link, $idManager, $id);
 } else {
-    $sql = <<<sqlCommand
-        SELECT p.productName, quantity, deliveryTo, od.address, pay, od.creditCard, a.account, od.totalAmount FROM product as p
-        JOIN orderDetail as od ON p.productId = od.productId
-        JOIN account as a ON a.accountId = od.accountId
-        WHERE managerId = ?
-        ORDER BY od.accountId
-    sqlCommand;
-    $result = $link->prepare($sql);
-    $result->execute(array($idManager));
+    $result = getOrder($link, $idManager);
 }
 
 

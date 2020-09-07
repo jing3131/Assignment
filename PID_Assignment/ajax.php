@@ -2,6 +2,7 @@
 header('Content-Type: application/json; charset=UTF-8');
 session_start();
 
+require("getSql.php");
 require("config.php");
 $account = $_SESSION["account"];
 $sql =<<<sqlCommand
@@ -43,11 +44,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){     // 如果是post請求
     }
     else if($buyOrShopping == 2){            // 刪除購物車
         $shoppingCarId = $_POST["shoppingCarId"];
-        $sql =  <<<sqlCommand
-            DELETE FROM shoppingCar WHERE shoppingCarId = ?
-        sqlCommand;
-        $result = $link->prepare($sql);
-        $result->execute(array($shoppingCarId));
+        deleteShoppingCar($link, $shoppingCarId);           // 刪除購物車的資料
     }
     else{
         // 新增訂單
@@ -55,6 +52,7 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){     // 如果是post請求
         $pay = $_POST["pay"];
         $creditCardNum = $_POST["creditCardNum"];
         $totalAmount = $productPrice * $quantity;
+        $shoppingCarId = $_POST["shoppingCarId"];
 
         $sql= <<<sqlCommand
             INSERT INTO orderDetail (accountId, productId, quantity, deliveryTo, address, pay, creditCard, totalAmount)
@@ -63,42 +61,25 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){     // 如果是post請求
         $result = $link->prepare($sql);
         $result->execute(array($id,$productId,$quantity,"$deliveryTo","$address","$pay","$creditCardNum",$totalAmount));
 
-        $sql=<<<sqlCommand
-            DELETE FROM shoppingCar WHERE productId = ?
-        sqlCommand;
-        $result = $link->prepare($sql);
-        $result->execute(array($productId));
+        deleteShoppingCar($link, $shoppingCarId);           // 刪除購物車的資料
 
 
         // 更新產品數量        
         $sql = <<<sqlCommand
-            SELECT productQuantity FROM product WHERE productId = ?
+            SELECT * FROM product WHERE productId = ?
         sqlCommand;
         $result = $link->prepare($sql);
         $result->execute(array($productId));
         $row = $result->fetch(PDO::FETCH_ASSOC);
         $qnt = $row["productQuantity"] - $quantity;             // 原有的數量 - 購買的數量
 
-        if($qnt==0){                                        // 沒庫存就下架
-            $sql = <<<sqlCommand
-                DELETE FROM product WHERE productId = ?
-            sqlCommand;
-            $result = $link->prepare($sql);
-            $result->execute(array($productId));
 
-            $sql = <<<sqlCommand
-                DELETE FROM shoppingCar WHERE productId = ?
-            sqlCommand;
-            $result = $link->prepare($sql);
-            $result->execute(array($productId));
-        }
-        else{
-            $sql = <<<sqlCommand
-                UPDATE product SET productQuantity = ? WHERE productId = ?
-            sqlCommand;
-            $result = $link->prepare($sql);
-            $result->execute(array($qnt,$productId));
-        }
+        $sql = <<<sqlCommand
+            UPDATE product SET productQuantity = ? WHERE productId = ?
+        sqlCommand;
+        $result = $link->prepare($sql);
+        $result->execute(array($qnt,$productId));
+
         
 
         // 更新帳戶
@@ -110,16 +91,4 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){     // 如果是post請求
     }
 
 } 
-// if($_SERVER["REQUEST_METHOD"]=="GET"){ 
-//     $sql=<<<sqlCommand
-//         SELECT creditCard,address FROM account WHERE accountId = ?
-//     sqlCommand;
-//     $result = $link->prepare($sql);
-//     $result->execute(array($id));
-//     $row = $result->fetch(PDO::FETCH_ASSOC);
-
-//     $_GET["creditCard"] = $row["creditCard"];
-//     $_GET["address"] = $row["address"];
-// }
-
 ?>

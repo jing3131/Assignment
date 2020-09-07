@@ -10,49 +10,38 @@ if (!is_numeric($id)) {
 }
 
 require("../config.php");
+require("../getUpdateAddSql.php");
+require("../getSql.php");
 
-$sql = <<<sqlCommand
-    select * from product
-    where productId = ?
-sqlCommand;
-$result = $link->prepare($sql);
-$result->execute(array($id));
+$result = getProductInId($link, $id);
 $row = $result->fetch(PDO::FETCH_ASSOC);
 
 if (isset($_POST["submitbtn"])) {
-    $productName = $_POST["ItemNameTF"];    // echo $productName."name"; 
-    $productText = $_POST["Itemtextarea"];  // echo $productText."text";
     $productQty = $_POST["quantityTF"];
     $productPrice = $_POST["priceTF"];
-    // $fp = fopen($_FILES['ImgFileInput']['tmp_name'], "rb");
-    // $pic = addslashes(fread($fp, $_FILES['ImgFileInput']['size']));
-    // fclose($fp);
-    if ($_FILES['ImgFileInput']['tmp_name'] == null) {
-        $sql = <<<sqlCommand
-            UPDATE product SET productName = ?, productText = ?, productQuantity = ?, productPrice = ?
-            WHERE productId = ?
-        sqlCommand;
-        $result = $link->prepare($sql);
-        $result->execute(array("$productName", "$productText", $productQty, $productPrice, $id));
+    if (!is_numeric($productPrice) || $productPrice <= 0 || !is_numeric($productQty) || $productQty <= 0) {
+        echo "<script>alert('請輸入正整數');</script>";
     } else {
-        $tmpName = $_FILES['ImgFileInput']['tmp_name'];
-        $fp = fopen($tmpName, "r");
-        $file_img = fread($fp, filesize(($tmpName)));
-        $img64 = base64_encode($file_img);
+        $productName = $_POST["ItemNameTF"]; 
+        $productText = $_POST["Itemtextarea"]; 
+
+        if ($_FILES['ImgFileInput']['tmp_name'] == null) {
+            updateItem($link, $productName, $productText, $productQty, $productPrice, $id);             // 圖片沒有更新
+        } else {
+            $tmpName = $_FILES['ImgFileInput']['tmp_name'];
+            $fp = fopen($tmpName, "r");
+            $file_img = fread($fp, filesize(($tmpName)));
+            $img64 = base64_encode($file_img);
 
 
-        $sql = <<<sqlCommand
-            UPDATE product SET productName = ?, productText = ?, productPic= ?, productQuantity = ?, productPrice = ?
-            WHERE productId = ?
-        sqlCommand;
-        $result = $link->prepare($sql);
-        $result->execute(array("$productName", "$productText", "$img64", $productQty, $productPrice, $id));
+            updateIncludePic($link, $productName, $productText, $img64, $productQty, $productPrice, $id);   // 圖片有更新
+        }
+
+
+        echo "<script>alert('更新成功');</script>";
+        header("refresh:0.5;url='item.php'");
+        exit();
     }
-
-
-    echo "<script>alert('更新成功');</script>";
-    header("refresh:0.5;url='../index.php'");
-    exit();
 }
 
 
@@ -142,7 +131,7 @@ if (isset($_POST["submitbtn"])) {
             <div class="form-group row">
                 <div class="col-1"><label for="quantity">數量</label></div>
                 <div class="offset-1 col-2">
-                    <input type="number" name="quantityTF" min="0" value="<?= $row["productQuantity"] ?>" required>
+                    <input type="number" name="quantityTF" min="0" oninput="if(value<0) value=0;" value="<?= $row["productQuantity"] ?>" required>
                 </div>
             </div>
 

@@ -12,32 +12,23 @@ if (isset($_POST["loginbtn"])) {
     $account = $_POST["accountTF"];
     $password = $_POST["passwordTF"];
 
-    $sqlAcc = "select account from account where account = ? ";
-    $resultAcc = $link->prepare($sqlAcc);
-    $resultAcc->execute(array($account));
+    require("../getAccountSql.php");
 
+    $dataAccount = getAccount($link, $account);
 
-    $row["account"] = $resultAcc->fetch(PDO::FETCH_ASSOC);
-
-    $sqlPwd = "select `password` from account where account = ? and `password` = ?";
-    $resultPwd = $link->prepare($sqlPwd);
-    $resultPwd->execute(array("$account", "$password"));
-    $row["password"] = $resultPwd->fetch(PDO::FETCH_ASSOC);         // 確認密碼正確與否
+    $dataPassword = getPassword($link, $account, $password);
 
 
     if ($account == null || $password == null) {
         echo "<script>alert('請輸入帳號或密碼');</script>";
-    } else if ($row["account"] == null) {
+    } else if ($dataAccount == null) {
         echo "<script>alert('帳號或密碼錯誤');</script>";
-    } else if ($row["password"] == null) {
+    } else if ($dataPassword == null) {
         echo "<script>alert('帳號或密碼錯誤');</script>";
     } else {
         $_SESSION["account"] = $account;
 
-        $sqlId = "select accountId, canUse from account where account = ?";
-        $resultId = $link->prepare($sqlId);
-        $resultId->execute(array("$account"));
-        $row = $resultId->fetch(PDO::FETCH_ASSOC);
+        $row = getAccountId($link, $account);
 
         if ($row["canUse"] == "N") {
             unset($_SESSION["account"]);

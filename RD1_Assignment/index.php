@@ -2,8 +2,8 @@
 $type;                // 判斷狀況
 $timeH;
 $locationId = 0;
-
-
+require("location.php");
+require("sqlWeather.php");
 require("config.php");
 
 if (isset($_POST["updatebtn"])) {
@@ -17,31 +17,23 @@ if (isset($_GET["oneDaysbtn"])) {
     $timeH = strtotime(date("Y-m-d-h"));
     $locationId = $_GET["locationName"];
 
-    require("sqlWeather.php");
+    $result = getWeather($link, $locationId);
     //print_r($result);
 } else if (isset($_GET["twoDaysbtn"])) {
     $timeH = strtotime(date("Y-m-d-h") . "+24 hour ");            // 現在時間+24小時
     //echo $timeH;
     $locationId = $_GET["locationName"];
+    $result = getWeather($link, $locationId);                   // 取得一週的天氣資訊(weatherdescription)
 
-    require("sqlWeather.php");
 } else if (isset($_GET["weekbtn"])) {
     $type = 1;                                                  // 一週天氣預報 type = 1
     $timeH = strtotime(date("Y-m-d-h") . "+6 day ");
     $locationId = $_GET["locationName"];
 
-    //require("sqlWeather.php");
-    $sql = <<<sqlCommand
-        SELECT l.locationName, wdn.startTime, wdn.endTime, wdn.value FROM location as l
-        JOIN WeatherDescription AS wdn ON l.locationId = wdn.locationId
-        WHERE l.locationId = $locationId
-        ORDER BY endTime DESC
-    sqlCommand;
-    $result = mysqli_query($link, $sql);
+    $result = getWeekWeather($link, $locationId);
 } else {
     $timeH = strtotime(date("Y-m-d-h"));
-
-    require("sqlWeather.php");
+    $result = getWeather($link, $locationId);
 }
 
 
@@ -71,8 +63,9 @@ if (isset($_GET["oneDaysbtn"])) {
 
                 <label for="locationName" style="margin:10px">選擇地區</label>
                 <select name="locationName" id="locationName" style="margin:10px">
+                    <?php echo getLocation($locationId);        // 下拉式選單 ?> 
                     <!-- <option value=""></option> -->
-                    <option value="0">嘉義縣</option>
+                    <!-- <option value="0">嘉義縣</option>
                     <option value="1">新北市</option>
                     <option value="2">嘉義市</option>
                     <option value="3">新竹縣</option>
@@ -93,7 +86,7 @@ if (isset($_GET["oneDaysbtn"])) {
                     <option value="18">基隆市</option>
                     <option value="19">澎湖縣</option>
                     <option value="20">彰化縣</option>
-                    <option value="21">連江縣</option>
+                    <option value="21">連江縣</option> -->
                 </select>
 
                 <button type="submit" name="oneDaysbtn" class="btn btn-outline-light text-dark">6小時天氣預報</button>
@@ -151,23 +144,30 @@ if (isset($_GET["oneDaysbtn"])) {
                             <img class="card-img-top" src="image/<?= $locationId ?>.jpg">
                             <?php
                             $sql = <<<sqlCommand
-                                select type, rainMm, locatedName from rain
+                                select RAIN, HOUR_24, locatedName from rain
                                 where locationId = $locationId
-                                limit 6;
+                                limit 3;
                             sqlCommand;
                             $result = mysqli_query($link, $sql);
 
                             while ($row = mysqli_fetch_assoc($result)) {
-                                if ($row["type"] == "RAIN") {
-                                    $mm = $row["rainMm"];
-                                    $loc = $row["locatedName"];
-                                    echo "<div> - $loc</div>
-                                    <div>24小時累計降雨量: $mm mm</div>";
-                                } else {
-                                    $mm = $row["rainMm"];
-                                    $loc = $row["locatedName"];
-                                    echo "<div>當前降雨量: $mm mm</div> <hr>";
-                                }
+                                $rain = $row["RAIN"];
+                                $hour24 = $row["HOUR_24"];
+                                $loc = $row["locatedName"];
+                                echo "<div> - $loc</div>
+                                        <div>24小時累計降雨量: $rain mm</div>";
+                                echo "<div>當前降雨量: $hour24 mm</div> <hr>";
+
+                                // if ($row["type"] == "RAIN") {
+                                //     $mm = $row["rainMm"];
+                                //     $loc = $row["locatedName"];
+                                //     echo "<div> - $loc</div>
+                                //     <div>24小時累計降雨量: $mm mm</div>";
+                                // } else {
+                                //     $mm = $row["rainMm"];
+                                //     $loc = $row["locatedName"];
+                                //     echo "<div>當前降雨量: $mm mm</div> <hr>";
+                                // }
                             }
                             ?>
                             <!-- <img class="card-img-top" src="image/<?= $locationId ?>-1.png"> -->

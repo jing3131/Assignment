@@ -7,18 +7,13 @@ if (isset($_SESSION["account"])) {
 } else if (isset($_SESSION["accountManager"])) {
     $userName = $_SESSION["accountManager"];
 }
-// else{
-//     $userName = "Guest";
-// }
 
 
 require("config.php");
+require("getSql.php");
 $id = $_SESSION["accountId"];
-$sql = <<<sqlCommand
-    select * from product;
-sqlCommand;
-$result = $link->prepare($sql);
-$result->execute();
+
+$result = getProduct($link);                      // 商品項目
 
 ?>
 <!DOCTYPE html>
@@ -122,7 +117,6 @@ $result->execute();
     </nav>
 
     <div class="banner">
-        <!-- <img src="shopping.jpg" alt=""> -->
         <h1 style="color:white">歡迎光臨MaMa購物網好神</h1>
         <p>MaMa的最愛?</p>
     </div>
@@ -130,21 +124,14 @@ $result->execute();
     <div class="container"><br>
 
         <h3>本季主打商品</h3><hr>
-        <!-- <?php if (isset($_SESSION["accountManager"])) { ?>
-            歡迎登入： <?= $userName ?>
-            <a href="index.php?logout=1" style="margin-left:70px">登出</a>
-        <?php } else { ?>
-            請先登入
-            <button type="submit" name="loginbtn" id="loginbtn" onclick="window.location='login.php'">登入</button>
-        <?php } ?> -->
 
 
         <div class="row">
             <?php foreach ($result->fetchAll() as $row) { ?>
-                <?php //$pic = base64_encode($row["productPic"]); 
+                <?php
                 ?>
                 <div class="col-3">
-                    <div class=row><img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" style="width:150px;height:150px" id="img"></td>
+                    <div class=row><a href="productDetail.php?id=<?= $row["productId"] ?>"><img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" style="width:150px;height:150px" id="img"></a></td>
                     </div>
                     <div class=row><a href="productDetail.php?id=<?= $row["productId"] ?>"><?= $row["productName"]; ?></a>
                         <?= "&nbsp; $ " . $row["productPrice"]; ?>

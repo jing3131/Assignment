@@ -107,11 +107,12 @@ CREATE TABLE weather (
 CREATE TABLE rain (
     id int AUTO_INCREMENT PRIMARY KEY,
     locationId int not null,
-    type varchar(20) not null,
-    rainMm double not null,
+    RAIN double not null,
+    HOUR_24 double not null,
     locatedName varchar(30) not null
     #dates datetime not null
 );
+
 
 
 DELETE FROM WeatherDescription;

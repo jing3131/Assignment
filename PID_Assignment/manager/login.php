@@ -2,39 +2,27 @@
 
 session_start();
 require("../config.php");
+require("../getAccountSql.php");
 
 if (isset($_POST["loginbtn"])) {
     $account = $_POST["accountTF"];
     $password = $_POST["passwordTF"];
 
-    $sqlAcc = "select account from manager where account = ? ";
-    $resultAcc = $link->prepare($sqlAcc);
-    $resultAcc->execute(array($account));
+    $dataAccount = getManagerAccount($link, $account);
 
-
-    $row["account"] = $resultAcc->fetch(PDO::FETCH_ASSOC);
-
-    $sqlPwd = "select `password` from manager where account = ? and `password` = ?";
-    $resultPwd = $link->prepare($sqlPwd);
-    $resultPwd->execute(array("$account", "$password"));
-    $row["password"] = $resultPwd->fetch(PDO::FETCH_ASSOC);         // 確認密碼正確與否
+    $dataPassword = getManagerPassword($link, $account, $password);
 
 
     if ($account == null || $password == null) {
         echo "<script>alert('請輸入帳號或密碼');</script>";
-    } else if ($row["account"] == null) {
+    } else if ($dataAccount == null) {
         echo "<script>alert('帳號或密碼錯誤');</script>";
-    } else if ($row["password"] == null) {
+    } else if ($dataPassword == null) {
         echo "<script>alert('帳號或密碼錯誤');</script>";
     } else {
         $_SESSION["accountManager"] = $account;
 
-        $sqlId = "select managerId from manager where account = ?";
-        $resultId = $link->prepare($sqlId);
-        $resultId->execute(array("$account"));
-        $row["managerId"] = $resultId->fetch(PDO::FETCH_ASSOC);
-
-        $id = implode("", $row["managerId"]);                                            // 用使用者名稱查詢ID
+        $id = getManagerId($link, $account);
         $_SESSION["accountIdManager"] = $id;
 
 

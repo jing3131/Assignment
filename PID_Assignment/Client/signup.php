@@ -15,17 +15,22 @@ if (isset($_POST["submitbtn"])) {
     if ($password != $password2) {
       echo "<script>alert('密碼需相等')</script>";
     } else {
-      $sql = <<<sqlCommand
-        INSERT INTO account (name, account, `password`, creditCard, address, canUse)
-        VALUES(?,?,?,?,?,?);
-      sqlCommand;
-      $result = $link->prepare($sql);
-      $result->execute(array($name, $account, $password, $credit, $address, 'Y'));
 
-      $_SESSION["account"] = $account;
+      require("../getAccountSql.php");
 
-      echo "<script>alert('註冊成功！')</script>";
-      header("refresh:0.5;url=../index.php");
+      $compare = compareAcount($link, $account);                               // 是否有被註冊過
+      if($compare != null){
+        echo "<script>alert('帳號名稱已註冊過，請再試一次')</script>";
+      }
+      else{
+        setAccount($link, $name, $account, $password, $credit, $address);
+
+        $_SESSION["account"] = $account;
+
+        echo "<script>alert('註冊成功！')</script>";
+        header("refresh:0.5;url=../index.php");
+      }
+      
     }
   }
 }
@@ -178,29 +183,14 @@ if (isset($_POST["submitbtn"])) {
           </div>
 
           <div class="wrap-input100 validate-input m-b-16" data-validate="Password is required">
-            <input class="input100" type="text" name="addressTF" placeholder="地址/Address" required>
+            <input class="input100" type="text" name="addressTF" placeholder="地址/Address" >
             <span class="focus-input100"></span>
           </div>
 
           <div class="wrap-input100 validate-input m-b-16" data-validate="Password is required">
-            <input class="input100" type="text" name="creditTF" placeholder="信用卡/CreditCard" required>
+            <input class="input100" type="text" name="creditTF" placeholder="信用卡/CreditCard" >
             <span class="focus-input100"></span>
           </div>
-
-          <!-- <div class="flex-sb-m w-full p-t-3 p-b-24">
-                        <div class="contact100-form-checkbox">
-                            <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-                            <label class="label-checkbox100" for="ckb1">
-                                Remember me
-                            </label>
-                        </div>
-
-                        <div>
-                            <a href="#" class="txt1">
-                                Forgot?
-                            </a>
-                        </div>
-                    </div> -->
 
           <div class="container-login100-form-btn m-t-17">
             <button class="login000-form-btn" name="submitbtn">

@@ -23,13 +23,9 @@ if (isset($_POST["submitbtn"])) {
         $img64 = base64_encode($file_img);
 
         require("../config.php");
+        require("../getUpdateAddSql.php");
 
-        $sql = <<<sqlCommand
-            INSERT INTO product (managerId, productName, productText, productPic, productPrice, productQuantity)
-            VALUES (?,?,?,?,?,?)
-        sqlCommand;
-        $result = $link->prepare($sql);
-        $result->execute(array($id, "$ItemName", "$Itemtext", "$img64", $price, $quantity));
+        addProduct($link, $id, $ItemName, $Itemtext, $img64, $price, $quantity);
         fclose($fp);
 
         echo "<script>alert('新增成功！')</script>";
@@ -196,10 +192,6 @@ if (isset($_POST["cancelbtn"])) {
             <div class="form-group row">
                 <section class="button-box">
                     <input id="ImgFileInput" name="ImgFileInput" type="file" accept="image/*" class="btn btn-outline-light">
-                    <!-- <label for="customFileInput" class="button-primary">
-                <img class="icon" src="../add.jpg" alt="上傳檔案" width="50px">
-                <span>選擇檔案按鈕</span>
-                </label> -->
                 </section>
                 <figure>
                     <img id="file_thumbnail">
@@ -214,23 +206,10 @@ if (isset($_POST["cancelbtn"])) {
                 <div class="offset-4 col-4" style="margin-left:865px">
                     <button name="submitbtn" id="submitbtn" type="submit" class="btn btn-outline-primary">確定</button>
                 </div>
-                <!-- <button name="cancelbtn" id="cancelbtn" type="submit" class="btn btn-outline-warning">取消</button> -->
             </div>
 
         </form>
-        <!-- <label class="upload_cover">
-        <input id="upload_input" type="file" onchange="handleFiles(this.files)" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">
-        <span class="upload_icon">➕</span>
-        <i class="delAvatar fa fa-times-circle-o" title="刪除"></i>
-        </label> -->
 
-        <!-- <form action="" name="formx" method="post" enctype="multipart/form-data">
-            <span>選擇檔案</span>
-            <input type="file" name="userfile" onchange="handleFiles(this.files)" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">
-            <div><p></p></div>
-            <ul id="list">
-            </ul>
-        </form> -->
 
 
 

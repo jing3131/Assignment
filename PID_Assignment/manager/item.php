@@ -2,10 +2,10 @@
 
 session_start();
 require("../config.php");
+require("../getSql.php");
 $id = $_SESSION["accountIdManager"];
-$sql = "select * from product where managerId = ?";
-$result = $link->prepare($sql);
-$result->execute(array($id));
+
+$result = getManagerProduct($link, $id);
 
 
 ?>
@@ -88,6 +88,8 @@ $result->execute(array($id));
                         <tr>
                             <th>產品名稱</th>
                             <th>產品描述</th>
+                            <th>數量</th>
+                            <th>$ NTD</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
@@ -96,6 +98,8 @@ $result->execute(array($id));
                             <tr>
                                 <td><?= $row["productName"] ?></td>
                                 <td><?= $row["productText"] ?></td>
+                                <td><?= $row["productQuantity"] ?></td>
+                                <td><?= $row["productPrice"] ?></td>
                                 <td>
                                     <span class="float-right">
                                         <a href="updateItem.php?id=<?= $row["productId"] ?>" class="btn btn-outline-primary">修改</a>
