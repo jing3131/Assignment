@@ -97,21 +97,7 @@ $result = getShoppingCarInId($link, $id);
         <br><br>
         <!-- <div class="row"> -->
         <?php foreach ($result->fetchAll() as $row) { ?>
-            <!-- <div class="col-1">
-                    <input type="checkbox" name="" id="ckbx<?= $row["productId"] ?>">
-                </div>
-                <div class="col-2">
-                    <img src="data:image/jpeg;base64,<?= $row["productPic"] ?>" style="width:50px; height:50px" alt="">
-                </div>
-                <div class="col-6">
-                    <div class="row">產品名稱：<?= $row["productName"] ?></div>
-                    <div class="row">
-                        <label for="">數量</label>
-                        <input type="number" name="quantityTF" min="0" max="<?= $row["productQuantity"] ?>" id="qty<?= $row["productId"] ?>" value="<?= $row["quantity"] ?>">
-                    </div>
-                </div> -->
-            <?php //$pdtId[]= $row["productId"]; 
-            ?>
+            
             <table class="table-primary table-bordered" width="1000px">
                 <tr>
                     <td Rowspan="3" Align="Center" width="150px"><input type="checkbox" name="ckbx" value="<?= $row["productId"] ?>"></td>
@@ -123,7 +109,7 @@ $result = getShoppingCarInId($link, $id);
                     <input type="hidden" name="shoppingCarId<?= $row["shoppingCarId"] ?>" id="shoppingCarId<?= $row["productId"] ?>" value="<?= $row["shoppingCarId"] ?>">
                 <tr>
                     <td><label for="">數量</label>
-                        <input type="number" name="quantityTF" min="0" max="<?= $row["productQuantity"] ?>" id="qty<?= $row["productId"] ?>" value="<?= $row["quantity"] ?>">
+                        <input type="number" name="quantityTF" min="1" oninput="if(value<0) value=1; if(value> <?= $row['productQuantity'] ?>) value=<?= $row['productQuantity'] ?>;" id="qty<?= $row["productId"] ?>" value="<?= $row["quantity"] ?>">
                     </td>
                 </tr>
                 <tr>
@@ -153,8 +139,9 @@ $result = getShoppingCarInId($link, $id);
         <!-- </div> -->
         <br>
         <form action="" method="post">
-            <button type="submit" id="deletebtn" name="deletebtn" style="margin-left:800px" class="btn btn-outline-danger">刪除購物車</button>    <!--style="float:right"-->
-            <button type="submit" id="okbtn" name="okbtn"  class="btn btn-outline-success">確認送出</button>
+            <button type="submit" id="deletebtn" name="deletebtn" style="margin-left:800px" class="btn btn-outline-danger">刪除購物車</button>
+            <!--style="float:right"-->
+            <button type="submit" id="okbtn" name="okbtn" class="btn btn-outline-success">確認送出</button>
         </form>
 
 
@@ -172,8 +159,7 @@ $result = getShoppingCarInId($link, $id);
                 } else if ($("input:radio[name=pay]:checked").val() == "credit" && $("#creditTF").val() == "") {
                     alert("請填寫信用卡卡號");
                 } else {
-                    // var ckLan = $("input:checkbox[name=ckbx]:checked").length;          // 被勾選的項目有幾筆
-                    var ckLan = $("input:checkbox[name=ckbx]").length;
+                    var ckLan = $("input:checkbox[name=ckbx]").length;                      // 總共有幾個checkbox name='ckbx'
                     // alert(ckLan);
                     var ckbxId = document.getElementsByName('ckbx'); // 取得所有checkbox name='ckbx'
                     for (let i = 0; i < ckLan; i++) {
@@ -182,22 +168,27 @@ $result = getShoppingCarInId($link, $id);
                         if (ckbxId[i].checked) { // 找到有被勾選的productId
                             pdtId = ckbxId[i].value;
                             // alert(pdtId);
-                            $.ajax({
-                                type: "post",
-                                url: "../ajax.php",
-                                dataType: "json",
-                                data: {
-                                    productId: pdtId,
-                                    productQuantity: $("#qty" + pdtId).val(), // "#"+變數 可串接成變動id
-                                    buyOrShopping: 1,
-                                    deliveryTo: $("input:radio[name=deliveryTo]:checked").val(),
-                                    address: $("#addressTF").val(),
-                                    pay: $("input:radio[name=pay]:checked").val(),
-                                    creditCardNum: $("#creditTF").val(),
-                                    productPrice: $("#productPrice" + pdtId).text(),
-                                    shoppingCarId: $("#shoppingCarId"+pdtId).val()
-                                }
-                            });                            
+                            if (!$.isNumeric($("#qty" + pdtId).val())) {
+                                alert("請輸入正整數");
+                            } else {
+                                $.ajax({
+                                    type: "post",
+                                    url: "../ajax.php",
+                                    dataType: "json",
+                                    data: {
+                                        productId: pdtId,
+                                        productQuantity: $("#qty" + pdtId).val(), // "#"+變數 可串接成變動id
+                                        buyOrShopping: 1,
+                                        deliveryTo: $("input:radio[name=deliveryTo]:checked").val(),
+                                        address: $("#addressTF").val(),
+                                        pay: $("input:radio[name=pay]:checked").val(),
+                                        creditCardNum: $("#creditTF").val(),
+                                        productPrice: $("#productPrice" + pdtId).text(),
+                                        shoppingCarId: $("#shoppingCarId" + pdtId).val()
+                                    }
+                                });
+                                
+                            }
                         }
                     }
                     alert("購買成功");
@@ -222,7 +213,7 @@ $result = getShoppingCarInId($link, $id);
                             url: '../ajax.php',
                             dataType: "json",
                             data: {
-                                shoppingCarId: $("#shoppingCarId"+pdtId).val(),
+                                shoppingCarId: $("#shoppingCarId" + pdtId).val(),
                                 buyOrShopping: 2
                             }
                         })

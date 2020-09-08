@@ -44,32 +44,15 @@ $result = getProductInId($link, $id);             // 商品細項
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="css/input.css">
+
     <style>
-        input[type=number] {
-            height: 30px;
-            line-height: 30px;
-            font-size: 16px;
-            padding: 0 8px;
-        }
-
-        input[type=number]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            cursor: pointer;
-            display: block;
-            width: 8px;
-            color: #333;
+        .bannerAvd{
+            background-color: wheat;
+            padding-top: 90px;
+            padding-bottom: 10px;
             text-align: center;
-            position: relative;
-        }
-
-        input[type=number]:hover::-webkit-inner-spin-button {
-            background: #eee url('http://i.stack.imgur.com/YYySO.png') no-repeat 50% 50%;
-            width: 14px;
-            height: 14px;
-            padding: 4px;
-            position: relative;
-            right: 4px;
-            border-radius: 28px;
+            opacity:0.7;
         }
     </style>
 </head>
@@ -107,9 +90,6 @@ $result = getProductInId($link, $id);             // 商品細項
                     <li class="nav-item">
                         <a class="nav-link btn btn-outline-dark" href="manager/member.php" style="margin-left:10px;">會員列表</a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link btn btn-outline-dark" href="index.php" style="margin-left:50px;">首頁</a>
-                    </li> -->
 
                 <?php } else if (isset($_SESSION["account"])) { ?>
                     <span class="navbar-text" style="margin-left:50px;">歡迎登入： <?= $userName ?></span>
@@ -122,9 +102,7 @@ $result = getProductInId($link, $id);             // 商品細項
                     <li class="nav-item">
                         <a class="nav-link btn btn-outline-dark" href="client/history.php" style="margin-left:50px;"> 購買歷史 </a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link btn btn-outline-dark" href="index.php" style="margin-left:50px;">首頁</a>
-                    </li> -->
+
                 <?php } else { ?>
                     <span class="navbar-text" style="margin-left:30px;">(管理請先登入)</span>
                     <li class="nav-item">
@@ -132,7 +110,7 @@ $result = getProductInId($link, $id);             // 商品細項
                     </li>
                     <span class="navbar-text" style="margin-left:60px;">(一般會員登入)</span>
                     <li class="nav-item">
-                        <a class="nav-link" href="client/login.php"> 會員登入 </a>
+                        <a class="nav-link" href="client/login.php?productId=<?= $id ?>"> 會員登入 </a>
                     </li>
                 <?php } ?>
 
@@ -153,7 +131,6 @@ $result = getProductInId($link, $id);             // 商品細項
                 ?>
                 <div class="col-7">
                     <img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" style="width:450px" id="img">
-                    <!-- <img src="add.jpg" style="width:450px"> -->
                 </div>
                 <div class="col-5">
                     <div class="row" style="margin-bottom: 30px;">
@@ -173,6 +150,10 @@ $result = getProductInId($link, $id);             // 商品細項
                         <div class="row" style="margin-bottom: 30px;">
                             <button name="buybtn" id="buybtn" type="button" class="btn btn-outline-success">直接購買</button> <!-- data-toggle="modal" data-target="#buyModal" -->
                             <button name="shoppingCarbtn" id="shoppingCarbtn" type="button" class="btn btn-outline-primary" style="margin-left:20px;">購物車</button>
+                        </div>
+                    <?php } else if(!isset($_SESSION["accountManager"])){ ?>
+                        <div class="row" style="margin-bottom: 30px;">
+                            <button name="loginbtn" id="loginbtn" type="button" class="btn btn-outline-success" onclick="window.location='client/login.php?productId=<?= $id ?>'">購買請先登入</button>   
                         </div>
                     <?php } ?>
 
@@ -255,6 +236,11 @@ $result = getProductInId($link, $id);             // 商品細項
             <!-- </form> -->
             <!--交易對話盒結束-->
 
+        </div>
+
+        
+        <div class="bannerAvd" style="margin-top: 250px;">
+            <p><a href="">歡迎置入 (MaMa好神關心你 :D)</a></p>
         </div>
     </div>
 

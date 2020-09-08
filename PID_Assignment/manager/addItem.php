@@ -48,6 +48,7 @@ if (isset($_POST["cancelbtn"])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="../css/input.css">
     <link href="../bootstrap-4.5.2-dist/css/bootstrap.css" rel="stylesheet">
     <script type="text/javascript" src="../jquery.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -80,34 +81,6 @@ if (isset($_POST["cancelbtn"])) {
         top: 2px;
     }
     </style> -->
-    <style>
-        input[type=number] {
-            height: 30px;
-            line-height: 30px;
-            font-size: 16px;
-            padding: 0 8px;
-        }
-
-        input[type=number]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            cursor: pointer;
-            display: block;
-            width: 8px;
-            color: #333;
-            text-align: center;
-            position: relative;
-        }
-
-        input[type=number]:hover::-webkit-inner-spin-button {
-            background: #eee url('http://i.stack.imgur.com/YYySO.png') no-repeat 50% 50%;
-            width: 14px;
-            height: 14px;
-            padding: 4px;
-            position: relative;
-            right: 4px;
-            border-radius: 28px;
-        }
-    </style>
 
 </head>
 

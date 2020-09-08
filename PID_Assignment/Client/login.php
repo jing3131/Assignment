@@ -38,7 +38,15 @@ if (isset($_POST["loginbtn"])) {
             $_SESSION["accountId"] = $id;
 
             echo "<script>alert('歡迎登入');</script>";
-            header("refresh:1;url=../index.php");
+            if($_GET["productId"] != null){                                     // 如果從產品細項的button登入，就會跳轉回來
+                $productId = $_GET["productId"];
+                header("refresh:1;url=../productDetail.php?id=$productId");
+            }
+            else{
+                header("refresh:1;url=../index.php");
+            }
+            
+            
         }
     }
 }

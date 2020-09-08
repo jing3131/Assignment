@@ -56,3 +56,8 @@ CREATE TABLE orderDetail (
     totalAmount int not null
 );
 
+# CREATE TABLE popular (
+#    productId int not null,
+#    sellQuantity int
+#)
+

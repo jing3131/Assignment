@@ -1,5 +1,5 @@
 CREATE DATABASE RD1_Assignment DEFAULT CHARACTER SET utf8;
-USE DATABASE RD1_Assignment;
+USE RD1_Assignment;
 
 CREATE TABLE location (
     locationId int PRIMARY KEY,

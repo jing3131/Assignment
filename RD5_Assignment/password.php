@@ -1,6 +1,6 @@
 <?php
 
-$password = $_POST["passwordTF"];
+$password = MD5($_POST["passwordTF"]);
 $id = $_SESSION["accountId"];
 
 

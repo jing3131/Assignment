@@ -2,6 +2,8 @@
 
 session_start();
 require("getSql.php");
+require("config.php");
+
 
 if(isset($_POST["cancelbtn"])){
     header("Location: memberIndex.php");
@@ -22,9 +24,8 @@ if(isset($_POST["submitbtn"])){
     else{
         $deposit = $_POST["rdobtn"];
         // echo $deposit;
-        require("config.php");
         require("password.php");
-    
+        
         if($password != $pwd){
             echo "<script> alert('輸入密碼錯誤，請再次確認') </script>";        // 密碼比對
         }

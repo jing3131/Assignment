@@ -157,17 +157,6 @@ if (isset($_GET["oneDaysbtn"])) {
                                 echo "<div> - $loc</div>
                                         <div>24小時累計降雨量: $rain mm</div>";
                                 echo "<div>當前降雨量: $hour24 mm</div> <hr>";
-
-                                // if ($row["type"] == "RAIN") {
-                                //     $mm = $row["rainMm"];
-                                //     $loc = $row["locatedName"];
-                                //     echo "<div> - $loc</div>
-                                //     <div>24小時累計降雨量: $mm mm</div>";
-                                // } else {
-                                //     $mm = $row["rainMm"];
-                                //     $loc = $row["locatedName"];
-                                //     echo "<div>當前降雨量: $mm mm</div> <hr>";
-                                // }
                             }
                             ?>
                             <!-- <img class="card-img-top" src="image/<?= $locationId ?>-1.png"> -->
@@ -176,8 +165,8 @@ if (isset($_GET["oneDaysbtn"])) {
                                 <?php  
                                     $sqlName = "select locationName from location where locationId = $locationId";
                                     $resultName = mysqli_query($link,$sqlName);
-                                    $row["locationName"] = mysqli_fetch_assoc($resultName);
-                                    echo implode("",$row["locationName"]);
+                                    $row = mysqli_fetch_assoc($resultName);
+                                    echo $row["locationName"];
                                 ?>
                             </div>
                             <div class="card-body">                                

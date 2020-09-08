@@ -1,6 +1,8 @@
 <?php
 session_start();
-$userName = "";
+require("config.php");
+require("getSql.php");
+$result = getAllProduct($link);                      // 商品項目
 
 if (isset($_SESSION["account"])) {
     $userName = $_SESSION["account"];
@@ -8,15 +10,9 @@ if (isset($_SESSION["account"])) {
     $userName = $_SESSION["accountManager"];
 }
 
-
-require("config.php");
-require("getSql.php");
-$id = $_SESSION["accountId"];
-
-$result = getProduct($link);                      // 商品項目
-
-// $cnt = 0;       // 計數 商品列表
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -31,9 +27,9 @@ $result = getProduct($link);                      // 商品項目
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
         .banner{
-            background: #fff url('img/shopping.jpg');
+            background: #fff url('img/shopping1.jpg');
             padding-top: 150px;
-            padding-bottom: 150px;
+            padding-bottom: 25px;
             text-align: center;
             opacity:0.7;
         }
@@ -42,7 +38,7 @@ $result = getProduct($link);                      // 商品項目
             padding-top: 80px;
             padding-bottom: 10px;
             text-align: center;
-            opacity:0.7;
+            /* opacity:0.7; */
         }
     </style>
 </head>
@@ -87,9 +83,6 @@ $result = getProduct($link);                      // 商品項目
                     <li class="nav-item">
                         <a class="nav-link btn btn-outline-dark" href="manager/member.php" style="margin-left:10px;">會員列表</a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link btn btn-outline-dark" href="index.php" style="margin-left:10px;">首頁</a>
-                    </li> -->
 
                 <?php } else if (isset($_SESSION["account"])) { ?>
                     <span class="navbar-text" style="margin-left:50px;">歡迎登入： <?= $userName ?></span>
@@ -102,9 +95,7 @@ $result = getProduct($link);                      // 商品項目
                     <li class="nav-item">
                         <a class="nav-link btn btn-outline-dark" href="client/history.php" style="margin-left:50px;"> 購買歷史 </a>
                     </li>
-                    <!-- <li class="nav-item">
-                        <a class="nav-link btn btn-outline-dark" href="index.php" style="margin-left:50px;">首頁</a>
-                    </li> -->
+
                 <?php } else { ?>
                     <span class="navbar-text" style="margin-left:30px;">(管理請先登入)</span>
                     <li class="nav-item">
@@ -125,18 +116,17 @@ $result = getProduct($link);                      // 商品項目
     </nav>
 
     <div class="banner">
-        <h1 style="color:white">歡迎光臨MaMa購物網好神</h1>
-        <p style="color:white">MaMa的最愛?</p>
+        <h1 style="color:navy">歡迎光臨MaMa購物網好神</h1>
+        <p style="color:navy">MaMa的最愛?</p>
     </div>
 
     <div class="container"><br>
 
-        <h3>本季新商品</h3><hr>
+        <h3>更多商品</h3><hr>
 
 
         <div class="row">
-            <?php foreach ($result->fetchAll() as $row) { //$cnt++; ?>
-                <?php //if($cnt <= 12) { ?>                
+            <?php foreach ($result->fetchAll() as $row) { $cnt++; ?>              
                 <div class="col-3">
                     <div class=row><a href="productDetail.php?id=<?= $row["productId"] ?>"><img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" style="width:150px;height:150px" id="img"></a></td>
                     </div>
@@ -145,18 +135,14 @@ $result = getProduct($link);                      // 商品項目
                     </div>
                     <div class="row">&nbsp;</div>
                 </div>
-            <?php // }
-        } ?>
+            <?php } ?>
         </div>
 
-        <div class="row" >
-            <a href="more.php" style="margin-left: 1020px;">查看更多>>></a>
-        </div>
-        <br>
         <div class="bannerAvd">
             <p><a href="">歡迎置入 (MaMa好神關心你 :D)</a></p>
         </div>
     </div>
 </body>
 
+</html>
 </html>

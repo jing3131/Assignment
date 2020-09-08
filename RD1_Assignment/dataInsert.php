@@ -18,9 +18,8 @@ foreach($val["weatherElement"] as $element){
     $values =$time["elementValue"][0]["value"];
     //echo $values;
 
-    // $values = $element["time"][0]["elementValue"][0]["value"];           // value
-    
-    if($elementName == "WeatherDescription") {      // $elementName == "PoP12h" || $elementName == "PoP6h" || $elementName == "Wx" || 
+       
+    if($elementName == "WeatherDescription") {   
         $startTime = $time["startTime"];
         $endTime = $time["endTime"];
         $sql =<<<sqlCommand

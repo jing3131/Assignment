@@ -36,8 +36,8 @@ try{
             where locationName = '$locationName'
         sqlCommand;
         $result = mysqli_query($link,$sqlId);
-        $row["locationId"] = mysqli_fetch_assoc($result);
-        $id = implode("",$row["locationId"]);                           // id
+        $row = mysqli_fetch_assoc($result);
+        $id = $row["locationId"];                           // id
 
         $element = [];
         foreach($val["weatherElement"] as $v){
@@ -46,16 +46,6 @@ try{
 
             $element[] = $values;                               // [0] = RAIN , [1] = HOUR_24
 
-            // if($elementName == "RAIN" || $elementName == "HOUR_24"){
-                
-    
-            // $sql = <<<sqlCommand
-            //     INSERT INTO rain (locationId, type, rainMm, locatedName)
-            //     VALUES ($id, '$elementName', $values, '$locatedName');
-            // sqlCommand;
-            // //echo $sql;
-            // mysqli_query($link,$sql);
-            // }
         }
 
             $sql = <<<sqlCommand

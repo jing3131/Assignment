@@ -1,9 +1,22 @@
 <?php
 
+function getAllProduct($link){                                  // 商品項目
+    $sql = <<<sqlCommand
+        SELECT * FROM product WHERE productQuantity <> 0
+        ORDER BY productId DESC 
+    sqlCommand;                                                 // 新增的優先放在前面
+    $result = $link->prepare($sql);
+    $result->execute();
+
+    return $result;
+}
+
 function getProduct($link){                                  // 商品項目
     $sql = <<<sqlCommand
-        SELECT * FROM product WHERE productQuantity <> 0;
-    sqlCommand;
+        SELECT * FROM product WHERE productQuantity <> 0
+        ORDER BY productId DESC 
+        LIMIT 12
+    sqlCommand;                                                 // 新增的優先放在前面，只取12筆
     $result = $link->prepare($sql);
     $result->execute();
 

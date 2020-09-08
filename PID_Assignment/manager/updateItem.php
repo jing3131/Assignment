@@ -19,7 +19,7 @@ $row = $result->fetch(PDO::FETCH_ASSOC);
 if (isset($_POST["submitbtn"])) {
     $productQty = $_POST["quantityTF"];
     $productPrice = $_POST["priceTF"];
-    if (!is_numeric($productPrice) || $productPrice <= 0 || !is_numeric($productQty) || $productQty <= 0) {
+    if (!is_numeric($productPrice) || $productPrice <= 0 || !is_numeric($productQty) || $productQty < 0) {
         echo "<script>alert('請輸入正整數');</script>";
     } else {
         $productName = $_POST["ItemNameTF"]; 
@@ -55,6 +55,7 @@ if (isset($_POST["submitbtn"])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link href="../bootstrap-4.5.2-dist/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/input.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

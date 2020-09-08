@@ -12,25 +12,31 @@ if (isset($_POST["submitbtn"])) {
     if ($_POST["creditTF"] == "") $credit = null;
     if ($_POST["addressTF"] == "") $address = null;
 
-    if ($password != $password2) {
+    require("../getAccountSql.php");
+
+    $compare = compareAcount($link, $account);                               // 是否有被註冊過
+    if ($compare != null) {
+      echo "<script>alert('帳號名稱已註冊過，請再試一次')</script>";
+    }     
+    else if (!preg_match('/\w{3,12}$/i', $account)) {                   // preg_match() 使用正規式判斷字串
+      echo "<script>alert('帳號名稱至少3碼，至多12碼，只允許包含英文數字與底線')</script>";
+    } 
+    else if (!preg_match('/\w{6,12}$/i', $password)) {
+      echo "<script>alert('密碼需至少6碼，至多12碼，只允許包含英文數字與底線')</script>"; 
+    }     
+    else if ($password != $password2) {
       echo "<script>alert('密碼需相等')</script>";
     } else {
 
-      require("../getAccountSql.php");
+      setAccount($link, $name, $account, $password, $credit, $address);
+      $row = getAccountId($link, $account);
+      $id = $row["accountId"];
 
-      $compare = compareAcount($link, $account);                               // 是否有被註冊過
-      if($compare != null){
-        echo "<script>alert('帳號名稱已註冊過，請再試一次')</script>";
-      }
-      else{
-        setAccount($link, $name, $account, $password, $credit, $address);
+      $_SESSION["account"] = $account;
+      $_SESSION["accountId"] = $id;
 
-        $_SESSION["account"] = $account;
-
-        echo "<script>alert('註冊成功！')</script>";
-        header("refresh:0.5;url=../index.php");
-      }
-      
+      echo "<script>alert('註冊成功！')</script>";
+      header("refresh:0.5;url=../index.php");
     }
   }
 }
@@ -52,38 +58,38 @@ if (isset($_POST["submitbtn"])) {
   <link href="bootstrap-4.5.2-dist/css/bootstrap.css" rel="stylesheet">
   <!--===============================================================================================-->
   <link rel="icon" type="image/png" href="../images/icons/favicon.ico" />
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="../vendor/bootstrap/css/bootstrap.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.7.0/css/font-awesome.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="../fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="../vendor/animate/animate.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="../vendor/css-hamburgers/hamburgers.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="../vendor/animsition/css/animsition.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="../vendor/select2/select2.min.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="../vendor/daterangepicker/daterangepicker.css">
-    <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="../css/util.css">
-    <link rel="stylesheet" type="text/css" href="../css/main.css">
-    <!--===============================================================================================-->
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../vendor/bootstrap/css/bootstrap.min.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../fonts/Linearicons-Free-v1.0.0/icon-font.min.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../vendor/animate/animate.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../vendor/css-hamburgers/hamburgers.min.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../vendor/animsition/css/animsition.min.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../vendor/select2/select2.min.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../vendor/daterangepicker/daterangepicker.css">
+  <!--===============================================================================================-->
+  <link rel="stylesheet" type="text/css" href="../css/util.css">
+  <link rel="stylesheet" type="text/css" href="../css/main.css">
+  <!--===============================================================================================-->
 
-    <script type="text/javascript" src="jquery.js"></script>
-    <script src="../bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
-    <script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
-    <script src="../vendor/animsition/js/animsition.min.js"></script>
-    <script src="../vendor/bootstrap/js/popper.js"></script>
-    <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../vendor/select2/select2.min.js"></script>
-    <script src="../vendor/daterangepicker/moment.min.js"></script>
-    <script src="../vendor/daterangepicker/daterangepicker.js"></script>
-    <script src="../vendor/countdowntime/countdowntime.js"></script>
-    <script src="../js/main.js"></script>
+  <script type="text/javascript" src="jquery.js"></script>
+  <script src="../bootstrap-4.5.2-dist/js/bootstrap.min.js"></script>
+  <script src="../vendor/jquery/jquery-3.2.1.min.js"></script>
+  <script src="../vendor/animsition/js/animsition.min.js"></script>
+  <script src="../vendor/bootstrap/js/popper.js"></script>
+  <script src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="../vendor/select2/select2.min.js"></script>
+  <script src="../vendor/daterangepicker/moment.min.js"></script>
+  <script src="../vendor/daterangepicker/daterangepicker.js"></script>
+  <script src="../vendor/countdowntime/countdowntime.js"></script>
+  <script src="../js/main.js"></script>
 </head>
 
 <body>
@@ -183,12 +189,12 @@ if (isset($_POST["submitbtn"])) {
           </div>
 
           <div class="wrap-input100 validate-input m-b-16" data-validate="Password is required">
-            <input class="input100" type="text" name="addressTF" placeholder="地址/Address" >
+            <input class="input100" type="text" name="addressTF" placeholder="地址/Address">
             <span class="focus-input100"></span>
           </div>
 
           <div class="wrap-input100 validate-input m-b-16" data-validate="Password is required">
-            <input class="input100" type="text" name="creditTF" placeholder="信用卡/CreditCard" >
+            <input class="input100" type="text" name="creditTF" placeholder="信用卡/CreditCard">
             <span class="focus-input100"></span>
           </div>
 

@@ -50,11 +50,11 @@ function getAccount($link, $account){
 }
 
 function getPassword($link, $account, $password){
-    $sqlPwd = "select `password` from member where account = ? and `password` = ?";
+    $sqlPwd = "select `password` from member where account = ? and `password` = MD5(?)";
     $resultPwd = $link->prepare($sqlPwd);
     $resultPwd->execute(array("$account", "$password"));
     $row = $resultPwd->fetch(PDO::FETCH_ASSOC);
-    return $row["password"];
+    return $row;
 }
 
 function getId($link, $account){                                   // 用使用者名稱查詢ID
@@ -68,7 +68,7 @@ function getId($link, $account){                                   // 用使用�
 function setAccount($link, $name, $account, $password){
     $sqlAdd = <<< sqlCommand
         INSERT INTO member (name, account, password)
-        VALUES(?,?,?);
+        VALUES(?,?,MD5(?));
     sqlCommand; 
     $resultAdd = $link->prepare($sqlAdd);
     $resultAdd->execute(array("$name","$account","$password"));

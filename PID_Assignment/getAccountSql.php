@@ -21,7 +21,7 @@ function getManagerAccount($link, $account){
 }
 
 function getManagerPassword($link, $account, $password){
-    $sqlPwd = "select `password` from manager where account = ? and `password` = ?";
+    $sqlPwd = "select `password` from manager where account = ? and `password` = MD5(?)";
     $resultPwd = $link->prepare($sqlPwd);
     $resultPwd->execute(array("$account", "$password"));
     $row = $resultPwd->fetch(PDO::FETCH_ASSOC);         // 確認密碼正確與否
@@ -40,7 +40,7 @@ function getManagerId($link, $account){
 function setAccount($link, $name, $account, $password, $credit, $address){
     $sql = <<<sqlCommand
         INSERT INTO account (name, account, `password`, creditCard, address, canUse)
-        VALUES(?,?,?,?,?,?);
+        VALUES(?,?,MD5(?),?,?,?);
     sqlCommand;
     $result = $link->prepare($sql);
     $result->execute(array($name, $account, $password, $credit, $address, 'Y'));
@@ -58,7 +58,7 @@ function getAccount($link, $account){
 }
 
 function getPassword($link, $account, $password){
-    $sqlPwd = "select `password` from account where account = ? and `password` = ?";
+    $sqlPwd = "select `password` from account where account = ? and `password` = MD5(?)";
     $resultPwd = $link->prepare($sqlPwd);
     $resultPwd->execute(array("$account", "$password"));
     $row = $resultPwd->fetch(PDO::FETCH_ASSOC);         // 確認密碼正確與否

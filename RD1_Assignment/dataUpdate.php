@@ -16,8 +16,8 @@ foreach($val["weatherElement"] as $element){
     sqlCommand;
     // echo $sqlId;
     $result = mysqli_query($link,$sqlId);
-    $row["locationId"] = mysqli_fetch_assoc($result); //print_r($result);
-    $id = implode("",$row["locationId"]);                   // id
+    $row = mysqli_fetch_assoc($result); //print_r($result);
+    $id = $row["locationId"];                   // id
     //echo $id."id";
               
     foreach($element["time"] as $time){
