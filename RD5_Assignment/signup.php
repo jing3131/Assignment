@@ -21,7 +21,7 @@ if (isset($_POST["submitbtn"])) {
     else if(!preg_match('/\w{3,12}$/i',$account)){
       echo "<script>alert('帳號名稱至少3碼，至多12碼，只允許包含英文數字與底線')</script>";
     }
-    else if(!preg_match('/\w{3,12}$/i',$password)){
+    else if(!preg_match('/\w{3,12}$/',$password)){
       echo "<script>alert('密碼需至少6碼，至多12碼，只允許包含英文數字與底線')</script>";
     }
     else if ($password != $password2) {

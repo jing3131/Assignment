@@ -38,7 +38,7 @@ if (isset($_SESSION["account"])) {
             padding-top: 80px;
             padding-bottom: 10px;
             text-align: center;
-            /* opacity:0.7; */
+            opacity:0.7;
         }
     </style>
 </head>
@@ -115,20 +115,23 @@ if (isset($_SESSION["account"])) {
 
     </nav>
 
+    
+
+    <div class="container">
+
     <div class="banner">
-        <h1 style="color:navy">歡迎光臨MaMa購物網好神</h1>
-        <p style="color:navy">MaMa的最愛?</p>
+        <h1 style="color:saddlebrown">歡迎光臨MaMa購物網好神</h1>
+        <p style="color:saddlebrown">MaMa的最愛?</p>
     </div>
 
-    <div class="container"><br>
-
+        <br>
         <h3>更多商品</h3><hr>
 
 
         <div class="row">
             <?php foreach ($result->fetchAll() as $row) { $cnt++; ?>              
                 <div class="col-3">
-                    <div class=row><a href="productDetail.php?id=<?= $row["productId"] ?>"><img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" style="width:150px;height:150px" id="img"></a></td>
+                    <div class=row><a href="productDetail.php?id=<?= $row["productId"] ?>"><img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" style="width:170px;height:170px" id="img"></a></td>
                     </div>
                     <div class=row><a href="productDetail.php?id=<?= $row["productId"] ?>"><?= $row["productName"]; ?></a>
                         <?= "&nbsp; $ " . $row["productPrice"]; ?>
