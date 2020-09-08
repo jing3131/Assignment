@@ -117,7 +117,7 @@ if (isset($_SESSION["account"])) {
 
     
 
-    <div class="container">
+    <div class="container" style="background-color: #eaefe4;">
 
     <div class="banner">
         <h1 style="color:saddlebrown">歡迎光臨MaMa購物網好神</h1>
@@ -131,9 +131,9 @@ if (isset($_SESSION["account"])) {
         <div class="row">
             <?php foreach ($result->fetchAll() as $row) { $cnt++; ?>              
                 <div class="col-3">
-                    <div class=row><a href="productDetail.php?id=<?= $row["productId"] ?>"><img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" style="width:170px;height:170px" id="img"></a></td>
+                    <div class=row style="margin-left: 50px;"><a href="productDetail.php?id=<?= $row["productId"] ?>"><img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" style="width:170px;height:170px" id="img"></a></td>
                     </div>
-                    <div class=row><a href="productDetail.php?id=<?= $row["productId"] ?>"><?= $row["productName"]; ?></a>
+                    <div class=row style="margin-left: 50px;"><a href="productDetail.php?id=<?= $row["productId"] ?>"><?= $row["productName"]; ?></a>
                         <?= "&nbsp; $ " . $row["productPrice"]; ?>
                     </div>
                     <div class="row">&nbsp;</div>
