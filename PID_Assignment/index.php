@@ -196,6 +196,38 @@ $result = getProduct($link);                      // 商品項目
             <p><a href="">歡迎置入 (MaMa好神關心你 :D)</a></p>
         </div>
     </div>
+
+
+    <!--Modal: modalAdvertisment-->
+    <div class="modal fade right" id="modalAdvertisment" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="true">
+        <div class="modal-dialog modal-side modal-bottom-right modal-notify modal-danger" role="document">
+            <!--Content-->
+            <div class="modal-content">
+
+                <!--Body-->
+                <div class="modal-body">
+
+                    <div class="row">
+
+                        <div style="background-color: wheat; height:700px; width:500px">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"> &times; </button>
+                            夏日新品拍賣
+                            <h3><strong>全館最低下殺三折</strong></h3>
+                            <a href="productDetail.php?id=36"><img src="img/stair.jpg" style="width: 495px; height:650px" alt=""></a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!--Modal: modalAdvertisment-->
+    <script>
+        $(function() {
+            $("#modalAdvertisment").modal();
+        })
+    </script>
 </body>
 
 </html>

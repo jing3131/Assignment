@@ -47,12 +47,22 @@ $result = getProductInId($link, $id);             // 商品細項
     <link rel="stylesheet" href="css/input.css">
 
     <style>
-        .bannerAvd{
+        .bannerAvd {
             background-color: wheat;
             padding-top: 90px;
             padding-bottom: 10px;
             text-align: center;
-            opacity:0.7;
+            opacity: 0.7;
+        }
+
+        .modal-header {
+            background-color: #f8d3c1;
+            padding: 9px 15px;
+            color: #FFF;
+            font-family: Verdana, sans-serif;
+            border-bottom: 1px solid #eee;
+            /* border-top-left-radius: 15px;
+            border-top-right-radius: 15px; */
         }
     </style>
 </head>
@@ -151,9 +161,9 @@ $result = getProductInId($link, $id);             // 商品細項
                             <button name="buybtn" id="buybtn" type="button" class="btn btn-outline-success">直接購買</button> <!-- data-toggle="modal" data-target="#buyModal" -->
                             <button name="shoppingCarbtn" id="shoppingCarbtn" type="button" class="btn btn-outline-primary" style="margin-left:20px;">購物車</button>
                         </div>
-                    <?php } else if(!isset($_SESSION["accountManager"])){ ?>
+                    <?php } else if (!isset($_SESSION["accountManager"])) { ?>
                         <div class="row" style="margin-bottom: 30px;">
-                            <button name="loginbtn" id="loginbtn" type="button" class="btn btn-outline-success" onclick="window.location='client/login.php?productId=<?= $id ?>'">購買請先登入</button>   
+                            <button name="loginbtn" id="loginbtn" type="button" class="btn btn-outline-success" onclick="window.location='client/login.php?productId=<?= $id ?>'">購買請先登入</button>
                         </div>
                     <?php } ?>
 
@@ -162,7 +172,7 @@ $result = getProductInId($link, $id);             // 商品細項
 
 
             <!--購買/購物車對話盒-->
-            <div class="modal" id="buyModal">
+            <div class="modal fade" id="buyModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
 
@@ -194,7 +204,7 @@ $result = getProductInId($link, $id);             // 商品細項
 
             <!-- 交易對話盒 -->
             <!-- <form action="" class="needs-validation"> -->
-            <div class="modal" id="transactionModal">
+            <div class="modal fade" id="transactionModal">
                 <div class="modal-dialog">
                     <div class="modal-content">
 
@@ -238,7 +248,7 @@ $result = getProductInId($link, $id);             // 商品細項
 
         </div>
 
-        
+
         <div class="bannerAvd" style="margin-top: 250px;">
             <p><a href="">歡迎置入 (MaMa好神關心你 :D)</a></p>
         </div>
@@ -267,10 +277,9 @@ $result = getProductInId($link, $id);             // 商品細項
                 // if (parseFloat($("#quantityTF").val()).toString() == "NaN") {
                 //     alert("請輸入正整數");
                 // } 
-                if($("#quantityTF").val()<=0){
+                if ($("#quantityTF").val() <= 0) {
                     alert("至少填入1");
-                }
-                else if (!$.isNumeric($("#quantityTF").val())) {
+                } else if (!$.isNumeric($("#quantityTF").val())) {
                     alert("請輸入正整數");
                 } else if (buy == 0) {
                     alert("已加入購物車");
