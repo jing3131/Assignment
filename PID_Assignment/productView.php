@@ -1,26 +1,3 @@
-<?php
-session_start();
-$userName = "";
-
-if (isset($_SESSION["account"])) {
-    $userName = $_SESSION["account"];
-} else if (isset($_SESSION["accountManager"])) {
-    $userName = $_SESSION["accountManager"];
-}
-
-
-require("config.php");
-require("getSql.php");
-$id = $_SESSION["accountId"];
-
-$result = getProduct($link,12,"");                      // 商品項目
-
-// $cnt = 0;       // 計數 商品列表
-
-require("modalBox/advertisment.php");
-require_once("test.php");
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,13 +11,19 @@ require_once("test.php");
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <style>
-
-        .bannerAvd {
+        .banner{
+            background: #fff url('img/shopping1.jpg');
+            padding-top: 150px;
+            padding-bottom: 25px;
+            text-align: center;
+            opacity:0.7;
+        }
+        .bannerAvd{
             background-color: wheat;
             padding-top: 80px;
             padding-bottom: 10px;
             text-align: center;
-            opacity: 0.7;
+            opacity:0.7;
         }
     </style>
 </head>
@@ -119,95 +102,36 @@ require_once("test.php");
 
 
 
-    <div class="container" style="background-color: #eaefe4;" id="main"><br>
+    <div class="container" style="background-color: #eaefe4;">
 
-        <div class="carousel slide" data-ride="carousel" id="carousel">
-            <!-- Indicators -->
-            <ul class="carousel-indicators">
-                <li data-target="#carousel" data-slide-to="0" class="active"></li>
-                <li data-target="#carousel" data-slide-to="1"></li>
-                <li data-target="#carousel" data-slide-to="2"></li>
-            </ul>
-
-            <!-- The slideshow -->
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="img-box p-1 border m-auto">
-                        <img src="img/shopping.jpg" width="1100" height="300">
-                        <h4 class="mt-4 mb-0"><strong class="text-success text-uppercase">歡迎光臨MaMa購物網好神</strong></h4>
-                        <h6 class="text-dark m-0">MaMa的最愛?</h6>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="img-box p-1 border m-auto">
-                        <img src="img/cartoon4.jpg" width="1100" height="300">
-                        <h4 class="mt-4 mb-0"><strong class="text-success text-uppercase">滿額送好禮</strong></h4>
-                        <br>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="img-box p-1 border m-auto">
-                        <img src="img/cartoon5.jpg" width="1100" height="300">
-                        <h5 class="mt-4 mb-0"><strong class="text-success text-uppercase">知名產品任你挑 :D</strong></h5>
-                        <br>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Left and right controls -->
-            <a class="carousel-control-prev" href="#carousel" data-slide="prev">
-                <span class="carousel-control-prev-icon"></span>
-            </a>
-            <a class="carousel-control-next" href="#carousel" data-slide="next">
-                <span class="carousel-control-next-icon"></span>
-            </a>
-
+        <div class="banner">
+            <h1 style="color:saddlebrown">歡迎光臨MaMa購物網好神</h1>
+            <p style="color:saddlebrown">MaMa的最愛?</p>
         </div>
 
         <br>
-        <div class="row">
-        <span style="font-size:30px;cursor:pointer; margin-left: 30px;" onclick="openNav()">&#9776;</span>
-        <h3 style="margin-left: 30px;">本季新商品</h3>
-        <h3><a href="popular.php" style="margin-left: 50px; color:red">熱門商品</a></h3>
-        </div>
-        
+        <h3><?=$type?></h3>
         <hr>
 
-
+        <h4 style="color: orange; margin-left:50px"><strong><?= $top ?></strong></h4>
         <div class="row">
-            <?php foreach ($result->fetchAll() as $row) { //$cnt++; 
-            ?>
-                <?php //if($cnt <= 12) { 
-                ?>
+            <?php foreach ($result->fetchAll() as $row) {
+                $cnt++; ?>
                 <div class="col-3">
-                    <div class="row" style="margin-left: 50px;"><a href="productDetail.php?id=<?= $row["productId"] ?>"><img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" style="width:170px;height:170px" id="img"></a></td>
+                    <div class=row style="margin-left: 50px;"><a href="productDetail.php?id=<?= $row["productId"] ?>"><img src="data:image/jpeg;base64, <?= $row["productPic"] ?>" style="width:170px;height:170px" id="img"></a></td>
                     </div>
-                    <div class="row" style="margin-left: 50px;"><a href="productDetail.php?id=<?= $row["productId"] ?>"><?= $row["productName"]; ?></a>
+                    <div class=row style="margin-left: 50px;"><a href="productDetail.php?id=<?= $row["productId"] ?>"><?= $row["productName"]; ?></a>
                         <?= "&nbsp; $ " . $row["productPrice"]; ?>
                     </div>
                     <div class="row">&nbsp;</div>
                 </div>
-            <?php // }
-            } ?>            
-            
-        </div>
-        <div class="row">
-        <a href="more.php" style="margin-left: 1020px;">查看更多>>></a>
+            <?php } ?>
         </div>
 
-        <br>
         <div class="bannerAvd">
             <p><a href="">歡迎置入 (MaMa好神關心你 :D)</a></p>
         </div>
     </div>
-
-
-   
-    <script>
-        $(function() {
-            $("#modalAdvertisment").modal();
-        })
-    </script>
 </body>
 
 </html>

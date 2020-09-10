@@ -11,12 +11,12 @@ function getAllProduct($link){                                  // 商品項目
     return $result;
 }
 
-function getProduct($link){                                  // 商品項目
+function getProduct($link, $limit, $desc){                                  // 商品項目
     $sql = <<<sqlCommand
         SELECT * FROM product WHERE productQuantity <> 0
-        ORDER BY productId DESC 
-        LIMIT 12
-    sqlCommand;                                                 // 新增的優先放在前面，只取12筆
+        ORDER BY quantitySold $desc, productId
+        LIMIT $limit
+    sqlCommand;                                                 // 新增的優先放在前面，只取?筆
     $result = $link->prepare($sql);
     $result->execute();
 
@@ -86,6 +86,13 @@ function getShoppingCarInId($link, $id){
     sqlCommand;
     $result = $link->prepare($sql);
     $result->execute(array($id));
+    return $result;
+}
+
+function getPopular($link){
+    $sql = "select * from product ORDER BY quantitySold DESC LIMIT 1";          // 挑出銷售數量最高的商品
+    $result = $link->prepare($sql);
+    $result->execute();
     return $result;
 }
 

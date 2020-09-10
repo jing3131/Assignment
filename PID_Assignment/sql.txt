@@ -31,7 +31,8 @@ CREATE TABLE product(
     productText varchar(100) not null,
     productPic LONGBLOB,
     productPrice int not null,
-    productQuantity int not null
+    productQuantity int not null,
+    quantitySold int 
 );
 
 CREATE TABLE shoppingCar(
@@ -56,8 +57,5 @@ CREATE TABLE orderDetail (
     totalAmount int not null
 );
 
-# CREATE TABLE popular (
-#    productId int not null,
-#    sellQuantity int
-#)
+
 

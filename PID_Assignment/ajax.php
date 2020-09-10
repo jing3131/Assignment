@@ -71,14 +71,15 @@ if($_SERVER["REQUEST_METHOD"]=="POST"){     // 如果是post請求
         $result = $link->prepare($sql);
         $result->execute(array($productId));
         $row = $result->fetch(PDO::FETCH_ASSOC);
+        $qntSold = $row["quantitySold"] + $quantity;            // 原本已銷售數量 + 此訂單的銷售數量
         $qnt = $row["productQuantity"] - $quantity;             // 原有的數量 - 購買的數量
 
 
         $sql = <<<sqlCommand
-            UPDATE product SET productQuantity = ? WHERE productId = ?
+            UPDATE product SET productQuantity = ?, quantitySold = ? WHERE productId = ?
         sqlCommand;
         $result = $link->prepare($sql);
-        $result->execute(array($qnt,$productId));
+        $result->execute(array($qnt,$qntSold,$productId));
 
         
 

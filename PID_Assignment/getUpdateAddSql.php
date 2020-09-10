@@ -20,8 +20,8 @@ function updateIncludePic($link, $productName, $productText, $img64, $productQty
 
 function addProduct($link, $id, $ItemName, $Itemtext, $img64, $price, $quantity){
     $sql = <<<sqlCommand
-            INSERT INTO product (managerId, productName, productText, productPic, productPrice, productQuantity)
-            VALUES (?,?,?,?,?,?)
+            INSERT INTO product (managerId, productName, productText, productPic, productPrice, productQuantity, quantitySold)
+            VALUES (?,?,?,?,?,?,0)
     sqlCommand;
     $result = $link->prepare($sql);
     $result->execute(array($id, "$ItemName", "$Itemtext", "$img64", $price, $quantity));
